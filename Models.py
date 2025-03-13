@@ -26,6 +26,20 @@ class EquipmentType(IntEnum):
     bay = 13
     weaponbay = 14
 
+class WeightClass(IntEnum):
+    ultralight = 0
+    light = 1
+    medium = 2
+    heavy = 3
+    assault = 4
+    superHeavy = 5
+
+class UnitCategory(IntEnum):
+    official = 0
+    userCreated = 1
+    apocryphal = 2
+    illegal = 3
+
 # SearchQuery BaseModel
 class SearchFilter(BaseModel):
     filter: Dict = Field(description="The query to run against the data. The query is based on MongoDb filter.",
