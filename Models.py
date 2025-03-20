@@ -40,6 +40,31 @@ class UnitCategory(IntEnum):
     apocryphal = 2
     illegal = 3
 
+
+class UnitType(IntEnum):
+    aerospace = 0
+    dropship = 1
+    mech = 2
+    infantry = 3
+    vehicle = 4
+
+
+class UnitSubtype(IntEnum):
+    Aerodyne = 0
+    AerospaceFighter = 1
+    BattleArmor = 2
+    BattleMech = 3
+    CombatVehicle = 4
+    ConvFighter = 5
+    Conventional = 6
+    ConventionalFighter = 7
+    FixedWingSupport = 8
+    IndustrialMech = 9
+    OmniFighter = 10
+    OmniMech = 11
+    Spheroid = 12
+    SupportVehicle = 13
+
 # SearchQuery BaseModel
 class SearchFilter(BaseModel):
     filter: Dict = Field(description="The query to run against the data. The query is based on MongoDb filter.",
@@ -174,7 +199,6 @@ class TotalWarBattleMech(BaseModel):
     structure: Optional[str] = Field(description="Internal Structure Type", default=None)
     structureTechbase: Optional[str] = Field(description="Internal Structure Technology base", default=None)
     techbase: Optional[str] = Field(description="Overall unit Technology base", default=None)
-    unitType: Optional[str] = Field(description="Unit type", default=None)
     version: Optional[float] = Field(description="Unit data version", default=None)
     weapons: Optional[int] = Field(description="Number of weapons mounted on the unit", default=None)
     unitDataSourceUri: Optional[str] = Field(description="URI of the unit's source information", default=None)
@@ -199,8 +223,9 @@ class TotalWarBattleMech(BaseModel):
     armorFactorMax: Optional[int] = Field(description="Maximum amount of armor that can be mounted on this unit",
                                           default=None)
     fireControl: Optional[str] = Field(description="Fire Control", default=None)
-    unitSubtype: Optional[str] = Field(description="Unit Subtype", default=None)
     productionEra: Optional[int] = Field(description="Ear in which the unit was first produced", default=None)
+    unitTypeId: Optional[int] = Field(description="Type of unit", default=None)
+    unitSubtypeId: Optional[int] = Field(description="Subtype of unit", default=None)
 
 
 # Tested and Works
@@ -229,7 +254,6 @@ class TotalWarAerospace(BaseModel):
     structureTechbase: Optional[str] = Field(description="Internal Structure Technology base", default=None)
     safeThrust: Optional[int] = Field(description="Safe Thrust", default=None)
     techbase: Optional[str] = Field(description="Overall unit Technology base", default=None)
-    unitType: Optional[str] = Field(description="Unit type", default=None)
     version: Optional[float] = Field(description="Unit data version", default=None)
     weapons: Optional[str] = Field(description="Number of weapons mounted on the unit", default=None)
     unitDataSourceUri: Optional[str] = Field(description="URI of the unit's source information", default=None)
@@ -251,8 +275,9 @@ class TotalWarAerospace(BaseModel):
     armorFactorMax: Optional[int] = Field(description="Maximum amount of armor that can be mounted on this unit",
                                           default=None)
     fireControl: Optional[str] = Field(description="Fire Control", default=None)
-    unitSubtype: Optional[str] = Field(description="Unit Subtype", default=None)
     productionEra: Optional[int] = Field(description="Ear in which the unit was first produced", default=None)
+    unitTypeId: Optional[int] = Field(description="Type of unit", default=None)
+    unitSubtypeId: Optional[int] = Field(description="Subtype of unit", default=None)
 
 
 # Tested and works
@@ -268,7 +293,6 @@ class TotalWarInfantry(BaseModel):
     pv: Optional[int] = Field(description="Alpha Strike points value", default=None)
     source: Optional[str] = Field(description="Source of the unit information", default=None)
     techbase: Optional[str] = Field(description="Overall unit Technology base", default=None)
-    unitType: Optional[str] = Field(description="Unit type", default=None)
     version: Optional[float] = Field(description="Unit data version", default=None)
     armorTechbase: Optional[str] = Field(description="Armor Technology base", default=None)
     structureTechbase: Optional[str] = Field(description="Internal Structure Technology base", default=None)
@@ -291,7 +315,6 @@ class TotalWarInfantry(BaseModel):
     armorFactor: Optional[int] = Field(description="Units armor factor, the total points of armor", default=None)
     armorFactorMax: Optional[int] = Field(description="Maximum amount of armor that can be mounted on this unit",
                                           default=None)
-    unitSubtype: Optional[str] = Field(description="Unit Subtype", default=None)
     trooperMass: Optional[float] = Field(description="Mass per Trooper", default=None)
     productionEra: Optional[int] = Field(description="Ear in which the unit was first produced", default=None)
     roleId: Optional[int] = Field(description="Role Id", default=None)
@@ -300,6 +323,8 @@ class TotalWarInfantry(BaseModel):
     secondaryWeaponTroops: Optional[int] = Field(description="Number troopers that have secondary weapons",
                                                  default=None)
     isExoskeleton: Optional[bool] = Field(description="Is this an exoskeleton", default=None)
+    unitTypeId: Optional[int] = Field(description="Type of unit", default=None)
+    unitSubtypeId: Optional[int] = Field(description="Subtype of unit", default=None)
 
 
 # Tested and Works
@@ -319,7 +344,6 @@ class TotalWarVehicle(BaseModel):
     pv: Optional[int] = Field(description="Alpha Strike points value", default=None)
     source: Optional[str] = Field(description="Source of the unit information", default=None)
     techbase: Optional[str] = Field(description="Internal Structure Technology base", default=None)
-    unitType: Optional[str] = Field(description="Unit type", default=None)
     version: Optional[float] = Field(description="Unit data version", default=None)
     unitDataSourceUri: Optional[str] = Field(description="URI of the unit's source information", default=None)
     turretType: Optional[int] = Field(description="Type of the turret type", default=None)
@@ -343,7 +367,6 @@ class TotalWarVehicle(BaseModel):
     armorFactorMax: Optional[int] = Field(description="Maximum amount of armor that can be mounted on this unit",
                                           default=None)
     fireControl: Optional[str] = Field(description="Units fire control", default=None)
-    unitSubtype: Optional[str] = Field(description="Units subtype", default=None)
     productionEra: Optional[int] = Field(description="Ear in which the unit was first produced", default=None)
     roleId: Optional[int] = Field(description="Role Id", default=None)
     hasControlSystems: Optional[bool] = Field(description="Has the Control systems", default=None)
@@ -355,6 +378,8 @@ class TotalWarVehicle(BaseModel):
     isTrailer: Optional[bool] = Field(description="Is this a trailer", default=None)
     extraCombatSeats: Optional[int] = Field(description="Extra Combat Seats", default=None)
     jumpjetType: Optional[int] = Field(description="Type of the Jumpjet type", default=None)
+    unitTypeId: Optional[int] = Field(description="Type of unit", default=None)
+    unitSubtypeId: Optional[int] = Field(description="Subtype of unit", default=None)
 
 
 # Tested and works
@@ -381,7 +406,6 @@ class TotalWarDropship(BaseModel):
     engineRating: Optional[int] = Field(description="Engine Rating", default=None)
     engineTechbase: Optional[str] = Field(description="Engine Technology base", default=None)
     chassisType: Optional[int] = Field(description="Type of Cassis", default=None)
-    unitType: Optional[str] = Field(description="Unit type", default=None)
     config: Optional[str] = Field(description="Unit configuration", default=None)
     bv: Optional[float] = Field(description="Battle Value 2 of the unit", default=None)
     copyrightTrademark: Optional[str] = Field(description="Basic Trademark/Copyright", default=None)
@@ -400,6 +424,8 @@ class TotalWarDropship(BaseModel):
     fireControl: Optional[str] = Field(description="Fire Control", default=None)
     roleId: Optional[int] = Field(description="Role Id", default=None)
     fuel: Optional[int] = Field(description="Fuel", default=None)
+    unitTypeId: Optional[int] = Field(description="Type of unit", default=None)
+    unitSubtypeId: Optional[int] = Field(description="Subtype of unit", default=None)
 
 
 # AlphaString BaseModels
@@ -457,7 +483,7 @@ class AlphaStrike(BaseModel):
         default=None)
     armorThreshold: Optional[int] = Field(description="Armor Threshold for aerospace units", default=None)
     isLAM: Optional[bool] = Field(description="Is this a LAM unit", default=None)
-    baseUnitType: Optional[str] = Field(description="Base Total War Unit Type", default=None)
+    baseUnitTypeId: Optional[int] = Field(description="Base Total War Unit Type", default=None)
     unitType: Optional[str] = Field(description="Alpha Strike Unit Type", default=None)
     size: Optional[int] = Field(description="Size value", default=None)
     walk: Optional[int] = Field(description="Regular ground movement", default=None)
@@ -490,10 +516,8 @@ class UnitData(BaseModel):
     id: Optional[str] = Field(description="ID of the unit", default=None, title="ID")
     name: Optional[str] = Field(description="Name of the unit", default=None, title="Name")
     model: Optional[str] = Field(description="Model of the unit", default=None, title="Model")
-    unitType: Optional[str] = Field(description="Unit type of the unit", default=None, title="Unit Type")
     productionEra: Optional[int] = Field(description="The era the unit started production", default=None)
     mass: Optional[float] = Field(description="Mass or tonnage of the unit", default=None)
-    unitSubtype: Optional[str] = Field(description="Subtype of the unit", default=None)
     version: Optional[float] = Field(description="Version of the unit document", default=None)
     bv: Optional[float] = Field(description="Battle Value v2", default=None)
     pv: Optional[int] = Field(description="Alpha Strike points value", default=None)
@@ -520,6 +544,8 @@ class UnitData(BaseModel):
     bvResults: Optional[Dict[str, Any]] = Field(description="Battle Value v2 Calculation Data", default=None)
     statistics: Optional[Dict[str, Any]] = Field(description="Different type of statistics about the unit",
                                                  default=None)
+    unitTypeId: Optional[int] = Field(description="Type of unit", default=None)
+    unitSubtypeId: Optional[int] = Field(description="Subtype of unit", default=None)
 
     @field_validator('totalWar', mode='before')
     def validate_totalwar_type(cls, v):
@@ -869,5 +895,48 @@ class DataResultItem(BaseModel):
     totalItems: int = Field(description="Total items", default=0)
     items: List[Union[EquipmentItem, UnitData, BasicItem, Dict, MULUnitItem, BoxsetItem]] = Field(description="Returned items",
                                                                                       default=[])
-    status: str = Field(description="Status of the operation", default=None)
-    message: str = Field(description="Message", default=None)
+    status: str = Field(description="Status of the operation", default="not completed")
+    message: str = Field(description="Message", default="Empty results")
+
+### Army List Models
+
+class RecordSheetType(IntEnum):
+    none = 0
+    totalWar = 1
+    alphaStrike = 2
+
+class ArmyUnitMember(BaseModel):
+    id: Optional[str] = Field(description="", default=None)
+    skill: Optional[str] = Field(description="", default=None)
+    availability: Optional[str] = Field(description="", default=None)
+    pilot: Optional[str] = Field(description="", default=None)
+    name: Optional[str] = Field(description="", default=None)
+    pilotAbilities: Optional[List[str]] = Field(description="", default=None)
+    rsType: Optional[RecordSheetType] = Field(description="", default=None)
+    points: Optional[str] = Field(description="", default=None)
+
+class ArmyListMember(BaseModel):
+    name: Optional[str] = Field(description="", default=None)
+    specialAbilities: List[str]
+    type: Optional[str] = Field(description="", default=None)
+    formationType: Optional[str] = Field(description="", default=None)
+    pointsType: Optional[str] = Field(description="", default=None)
+    pointsTotal: Optional[str] = Field(description="", default=None)
+    customFields: Optional[List[str]] = Field(description="", default=None)
+    members: Optional[List[ArmyUnitMember]] = Field(description="", default=None)
+
+class ArmyList(BaseModel):
+    name: Optional[str] = Field(description="", default=None)
+    subCommand: Optional[str] = Field(description="", default=None)
+    fiction: Optional[str] = Field(description="", default=None)
+    era: Optional[str] = Field(description="", default=None)
+    points: Optional[str] = Field(description="", default=None)
+    pointsType: Optional[str] = Field(description="", default=None)
+    experience: Optional[str] = Field(description="", default=None)
+    abilities: Optional[List[str]] = Field(description="", default=None)
+    type: Optional[str] = Field(description="", default=None)
+    combatCommand: Optional[str] = Field(description="", default=None)
+    addNotes: Optional[bool] = Field(description="", default=None)
+    rsType: Optional[RecordSheetType] = Field(description="", default=None)
+    format: Optional[str] = Field(description="", default=None)
+    members: Optional[List[ArmyListMember]] = Field(description="", default=None)
