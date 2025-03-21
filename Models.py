@@ -226,6 +226,8 @@ class TotalWarBattleMech(BaseModel):
     productionEra: Optional[int] = Field(description="Ear in which the unit was first produced", default=None)
     unitTypeId: Optional[int] = Field(description="Type of unit", default=None)
     unitSubtypeId: Optional[int] = Field(description="Subtype of unit", default=None)
+    weightClassId: Optional[int] = Field(description="Weight Class Id", default=None)
+    jumpjetType: Optional[int] = Field(description="Jumpjets type", default=None)
 
 
 # Tested and Works
@@ -278,6 +280,7 @@ class TotalWarAerospace(BaseModel):
     productionEra: Optional[int] = Field(description="Ear in which the unit was first produced", default=None)
     unitTypeId: Optional[int] = Field(description="Type of unit", default=None)
     unitSubtypeId: Optional[int] = Field(description="Subtype of unit", default=None)
+    weightClassId: Optional[int] = Field(description="Weight Class Id", default=None)
 
 
 # Tested and works
@@ -348,8 +351,10 @@ class TotalWarVehicle(BaseModel):
     unitDataSourceUri: Optional[str] = Field(description="URI of the unit's source information", default=None)
     turretType: Optional[int] = Field(description="Type of the turret type", default=None)
     transportSpace: Optional[Dict[str, int]] = Field(description="Transport space", default=None)
-    armorLocations: List[TotalWarArmorLocation]
-    equipmentList: List[TotalWarEquipmentItem]
+    equipmentList: Optional[List[TotalWarEquipmentItem]] = Field(description="Equipment, Weapons and Ammunition",
+                                                                 default=None)
+    armorLocations: Optional[List[TotalWarArmorLocation]] = Field(description="Armor locations and values",
+                                                                  default=None)
     structure: Optional[str] = Field(description="Internal Structure Type", default=None)
     structureTechbase: Optional[str] = Field(description="Internal Structure Type", default=None)
     armorTechbase: Optional[str] = Field(description="Armor Technology base", default=None)
@@ -544,20 +549,20 @@ class UnitData(BaseModel):
     bvResults: Optional[Dict[str, Any]] = Field(description="Battle Value v2 Calculation Data", default=None)
     statistics: Optional[Dict[str, Any]] = Field(description="Different type of statistics about the unit",
                                                  default=None)
-    unitTypeId: Optional[int] = Field(description="Type of unit", default=None)
-    unitSubtypeId: Optional[int] = Field(description="Subtype of unit", default=None)
+    unitTypeId: int = Field(description="Type of unit", default=None)
+    unitSubtypeId: int = Field(description="Subtype of unit", default=None)
 
     @field_validator('totalWar', mode='before')
     def validate_totalwar_type(cls, v):
-        if v['unitType'] == 'mech':
+        if v['unitTypeId'] == UnitType.mech:
             return TotalWarBattleMech(**v)
-        elif v['unitType'] == 'vehicle':
+        elif v['unitTypeId'] == UnitType.vehicle:
             return TotalWarVehicle(**v)
-        elif v['unitType'] == 'infantry':
+        elif v['unitTypeId'] == UnitType.infantry:
             return TotalWarInfantry(**v)
-        elif v['unitType'] == 'aerospace':
+        elif v['unitTypeId'] == UnitType.aerospace:
             return TotalWarAerospace(**v)
-        elif v['unitType'] == 'dropship':
+        elif v['unitTypeId'] == UnitType.dropship:
             return TotalWarDropship(**v)
         else:
             raise ValueError('Invalid unit type')
