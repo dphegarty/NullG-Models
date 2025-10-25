@@ -401,3 +401,24 @@ class HeatSinkType(IntEnum):
     laser = 4
     freezer = 5
     prototype = 6
+
+class TurretType(IntEnum):
+    """
+    Turret configuration types for vehicles and ships.
+
+    Identifies the configuration of a turret on a vehicle or ship.
+
+    Attributes:
+        none: No turret configuration (ID: 0).
+        single: Single turret (ID: 1).
+        duel: Dual turret (ID: 2).
+
+    Examples:
+        >>> TurretType.single
+        1
+        >>> TurretType.duel.name
+        'duel'
+    """
+    none = 0
+    single = 1
+    duel = 2

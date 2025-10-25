@@ -24,6 +24,7 @@ from pydantic import Field
 
 from NullgModels.EquipmentModels import EquipmentItem
 from NullgModels.NullGBaseModels import NullGBaseModel
+from NullgModels.NullGEnums import TurretType
 
 
 class TotalWarBasicComponent(NullGBaseModel):
@@ -247,28 +248,28 @@ class TotalWarBayBaseItem(NullGBaseModel):
         value: Capacity or size value for the bay.
 
     Examples:
-        >>> mech_bay = TotalWarBayBaseItem(name="Mech Bay", value="2")
-        >>> cargo_bay = TotalWarBayBaseItem(name="Cargo Bay", value="50 tons")
+        >>> first_class = TotalWarBayBaseItem(name="1stClass", value=10.0)
+        >>> second_class = TotalWarBayBaseItem(name="2ndClass", value=5.0)
     """
     name: Optional[str] = Field(
-        description="Name or type of the bay. Common types: Mech Bay, Vehicle Bay, "
-                    "Infantry Bay, Fighter Bay, Cargo Bay, Medical Bay.",
+        description="Name or type of the bay. Common types: 1st Class, 2nd Class, "
+                    "Crew, Steerage",
         default=None,
-        examples=["Mech Bay", "Vehicle Bay", "Cargo Bay", "Fighter Bay"]
+        examples=["2ndClass", "1stClass", "Crew", "Steerage"]
     )
-    value: Optional[str] = Field(
+    value: Optional[float] = Field(
         description="Capacity or configuration value for this bay. "
                     "May be unit count, tonnage, or other capacity measure.",
         default=None,
-        examples=["2", "4", "50 tons", "6 fighters"]
+        examples=[1, 5, 50]
     )
-
 
 class TotalWarBayExtendedItem(TotalWarBayBaseItem):
     """Extended bay information with door configuration.
 
     Enhanced bay information including the number of bay doors,
     which affects loading/unloading speed and tactical deployment.
+    This is used for Cargo, Mech and Infantry bays.
 
     Attributes:
         id: Unique identifier for this bay.
@@ -277,7 +278,7 @@ class TotalWarBayExtendedItem(TotalWarBayBaseItem):
     Examples:
         >>> extended_bay = TotalWarBayExtendedItem(
         ...     name="Mech Bay",
-        ...     value="4",
+        ...     value=4.0,
         ...     doors=2
         ... )
     """
@@ -1009,24 +1010,20 @@ class TotalWarVehicleData(TotalWarUnitDataBase):
         description="Additional construction options.",
         default=None
     )
-    turretType: Optional[str] = Field(
+    turretType: Optional[TurretType] = Field(
         description="Turret configuration (None, Single, Dual, Chin, Sponson).",
         default=None,
-        examples=["None", "Single", "Dual", "Chin"]
+        examples=[0, 1, 2]
     )
-    transportSpace: Optional[float] = Field(
+    transportSpace: Optional[TotalWarBayBaseItem] = Field(
         description="Cargo or infantry transport capacity in tons.",
         default=None,
         examples=[0, 2.5, 5.0, 10.0]
     )
-    structure: Optional[str] = Field(
+    structure: Optional[TotalWarStructureComponent] = Field(
         description="Vehicle structure type.",
         default=None,
         examples=["Standard", "Endo Steel"]
-    )
-    barRating: Optional[int] = Field(
-        description="Barrier armor rating.",
-        default=None
     )
     productionEra: Optional[int] = Field(
         description="Production era ID.",
@@ -1036,24 +1033,8 @@ class TotalWarVehicleData(TotalWarUnitDataBase):
         description="Whether vehicle has advanced control systems.",
         default=None
     )
-    heatSinks: Optional[int] = Field(
+    heatSinks: Optional[TotalWarHeatSinkComponent] = Field(
         description="Heat sinks (for energy-weapon equipped vehicles).",
-        default=None
-    )
-    heatSinksTechbase: Optional[str] = Field(
-        description="Technology base for heat sinks.",
-        default=None
-    )
-    heatSinksType: Optional[int] = Field(
-        description="Heat sink type code.",
-        default=None
-    )
-    heatSinksEngineBase: Optional[int] = Field(
-        description="Engine-integrated heat sinks.",
-        default=None
-    )
-    heatSinksOmniBase: Optional[int] = Field(
-        description="Omni-fixed heat sinks.",
         default=None
     )
     isTrailer: Optional[bool] = Field(
@@ -1091,30 +1072,22 @@ class TotalWarDropshipData(TotalWarUnitDataBase):
         barRating: Barrier armor rating.
         fuel: Fuel capacity.
     """
-    bays: Optional[List[TotalWarBayBaseItem]] = Field(
+    bays: Optional[List[TotalWarBayExtendedItem]] = Field(
         description="List of cargo and unit bays on the DropShip.",
         default=None
     )
-    quarters: Optional[Dict[str, int]] = Field(
+    quarters: Optional[List[TotalWarBayBaseItem]] = Field(
         description="Crew quarters allocation (officers, enlisted, passengers, etc.).",
         default=None,
         examples=[{"officers": 8, "enlisted": 24, "passengers": 12}]
     )
-    crewValues: Optional[Dict[str, int]] = Field(
+    crewValues: Optional[List[TotalWarBayBaseItem]] = Field(
         description="Crew requirements (pilots, gunners, engineers, etc.).",
         default=None,
         examples=[{"pilots": 2, "gunners": 8, "crew": 16}]
     )
-    heatSinks: Optional[int] = Field(
+    heatSinks: Optional[TotalWarHeatSinkComponent] = Field(
         description="Total heat sinks.",
-        default=None
-    )
-    heatSinksTechbase: Optional[str] = Field(
-        description="Technology base for heat sinks.",
-        default=None
-    )
-    heatSinksType: Optional[int] = Field(
-        description="Heat sink type code.",
         default=None
     )
     structuralIntegrity: Optional[int] = Field(
@@ -1131,10 +1104,6 @@ class TotalWarDropshipData(TotalWarUnitDataBase):
         description="Hull configuration (Aerodyne, Spheroid).",
         default=None,
         examples=[0, 1]
-    )
-    barRating: Optional[int] = Field(
-        description="Barrier armor rating.",
-        default=None
     )
     fuel: Optional[int] = Field(
         description="Fuel capacity in points.",
