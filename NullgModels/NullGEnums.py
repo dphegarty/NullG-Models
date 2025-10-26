@@ -447,6 +447,31 @@ class JumpJetType(IntEnum):
     umu = 3
 
 class RoleType(IntEnum):
+    """
+    Describes the role assigned to the unit
+
+    Attributes:
+        ambusher: Ambusher role (ID: 0).
+        attack_fighter: Attack fighter role (ID: 1).
+        brawler: Brawler role (ID: 2).
+        dogfighter: Dogfighter role (ID: 3).
+        fast_dogfighter: Fast dogfighter role (ID: 4).
+        fire_support: Fire support role (ID: 5).
+        interceptor: Interceptor role (ID: 6).
+        juggernaut: Juggernaut role (ID: 7).
+        missile_boat: Missile boat role (ID: 8).
+        scout: Scout role (ID: 9).
+        skirmisher: Skirmisher role (ID: 10).
+        sniper: Sniper role (ID: 11).
+        striker: Striker role (ID: 12).
+        transport: Transport role (ID: 13).
+
+        Examples:
+            >>> RoleType.ambusher
+            0
+            >>> RoleType.attack_fighter.name
+            'attack_fighter'
+    """
     ambusher = 0
     attack_fighter = 1
     brawler = 2
