@@ -24,7 +24,7 @@ from pydantic import Field
 
 from NullgModels.EquipmentModels import EquipmentItem
 from NullgModels.NullGBaseModels import NullGBaseModel
-from NullgModels.NullGEnums import TurretType
+from NullgModels.NullGEnums import TurretType, JumpJetTyp
 
 
 class TotalWarBasicComponent(NullGBaseModel):
@@ -787,7 +787,7 @@ class TotalWarBattleMechData(TotalWarUnitDataBase):
         default=None,
         examples=[1, 5, 9, 10, 13]
     )
-    jumpjetType: Optional[int] = Field(
+    jumpjetType: Optional[JumpJetType] = Field(
         description="Jump jet type code. "
                     "0=Standard, 1=Improved (more MP), 2=Prototype, etc.",
         default=None,

@@ -423,7 +423,7 @@ class TurretType(IntEnum):
     single = 1
     duel = 2
 
-class JumpJetTyp(IntEnum):
+class JumpJetType(IntEnum):
     """
     Jump Jet configuration types for units
 
