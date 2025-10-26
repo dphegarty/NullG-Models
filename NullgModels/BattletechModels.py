@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Optional, Union, Dict, Any
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, ValidationInfo
 
 from NullgModels.AlphaStrikeModels import AlphaStrikeData
 from NullgModels.Constants import *
@@ -191,12 +191,6 @@ class UnitData(NullGBaseModel):
     availableEras: Optional[List[int]] = Field(description="Eras the unit is available in", default=None)
     alphaStrike: Optional[AlphaStrikeData] = Field(description="Alpha Strike Data", default=None)
     alphaStrikeResults: Optional[Dict[str, Any]] = Field(description="Alpha Strike Calculation Data", default=None)
-    totalWar: Optional[Union[
-        TotalWarDropshipData, TotalWarInfantryData, TotalWarAerospaceData, TotalWarBattleMechData,
-        TotalWarVehicleData]] = Field(description="Total War Data", default=None)
-    bvResults: Optional[Dict[str, Any]] = Field(description="Battle Value v2 Calculation Data", default=None)
-    statistics: Optional[Dict[str, Any]] = Field(description="Different type of statistics about the unit",
-                                                 default=None)
     unitTypeId: int = Field(description="Type of unit", default=None)
     unitSubtypeId: int = Field(description="Subtype of unit", default=None)
     expanded: bool = Field(
@@ -204,13 +198,20 @@ class UnitData(NullGBaseModel):
         default=False,
         examples=[True, False]
     )
+    totalWar: Optional[Union[
+        TotalWarDropshipData, TotalWarInfantryData, TotalWarAerospaceData, TotalWarBattleMechData,
+        TotalWarVehicleData]] = Field(description="Total War Data", default=None)
+    bvResults: Optional[Dict[str, Any]] = Field(description="Battle Value v2 Calculation Data", default=None)
+    statistics: Optional[Dict[str, Any]] = Field(description="Different type of statistics about the unit",
+                                                 default=None)
 
-    @field_validator(FIELD_TOTAL_WAR, mode='before')
-    def validate_totalwar_type(cls, v: Dict):
+    @field_validator(FIELD_TOTAL_WAR, mode='after')
+    @classmethod
+    def validate_totalwar_type(cls, v: Dict, info: ValidationInfo):
         if v is not None and isinstance(v, dict):
-            if FIELD_UNIT_TYPE_ID in v and isinstance(v[FIELD_UNIT_TYPE_ID], int):
+            if FIELD_UNIT_TYPE_ID in info.data and isinstance(info.data[FIELD_UNIT_TYPE_ID], int):
                 try:
-                    thisUnitType = UnitType(v[FIELD_UNIT_TYPE_ID])
+                    thisUnitType = UnitType(info.data[FIELD_UNIT_TYPE_ID])
                 except ValueError:
                     raise ValueError('Invalid unit type')
 
@@ -247,12 +248,12 @@ class UnitDataExtended(UnitData):
         TotalWarVehicleExtendedData
     ]] = Field(description="Extended Total War Data that includes fill equipment data", default=None)
 
-    @field_validator(FIELD_TOTAL_WAR, mode='before')
-    def validate_totalwar_type(cls, v: Dict):
+    @field_validator(FIELD_TOTAL_WAR, mode='after')
+    def validate_totalwar_type(cls, v: Dict, info: ValidationInfo):
         if v is not None and isinstance(v, dict):
-            if FIELD_UNIT_TYPE_ID in v and isinstance(v[FIELD_UNIT_TYPE_ID], int):
+            if FIELD_UNIT_TYPE_ID in info.data and isinstance(info.data[FIELD_UNIT_TYPE_ID], int):
                 try:
-                    thisUnitType = UnitType(v[FIELD_UNIT_TYPE_ID])
+                    thisUnitType = UnitType(info.data[FIELD_UNIT_TYPE_ID])
                 except ValueError:
                     raise ValueError('Invalid unit type')
 

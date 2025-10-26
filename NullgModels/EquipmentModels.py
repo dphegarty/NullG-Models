@@ -1,7 +1,7 @@
 ## Equipment BaseModels
 from typing import Optional, List, Union, Dict
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, ValidationInfo
 
 from NullgModels.Constants import FIELD_EQUIPMENT_TYPE_ID
 from NullgModels.NullGBaseModels import NullGBaseModel
@@ -224,12 +224,13 @@ class EquipmentItem(NullGBaseModel):
     StructureItem, ConversionItem, ArmorItem, ManipulatorItem, MyomerItem, WeaponBayItem,
     EnhancementItem]] = Field(description="", default=None)
 
-    @field_validator('item', mode='before')
-    def validate_item_type(cls, v: Dict):
+    @field_validator('item', mode='after')
+    @classmethod
+    def validate_item_type(cls, v: Dict, info: ValidationInfo):
         if v is not None and isinstance(v, dict):
-            if FIELD_EQUIPMENT_TYPE_ID in v and isinstance(v[FIELD_EQUIPMENT_TYPE_ID], int):
+            if FIELD_EQUIPMENT_TYPE_ID in info.data and isinstance(info.data[FIELD_EQUIPMENT_TYPE_ID], int):
                 try:
-                    thisEquipmentType = EquipmentType(v[FIELD_EQUIPMENT_TYPE_ID])
+                    thisEquipmentType = EquipmentType(info.data[FIELD_EQUIPMENT_TYPE_ID])
                 except ValueError as e:
                     raise e
 
