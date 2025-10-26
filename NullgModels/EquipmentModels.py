@@ -101,7 +101,6 @@ class BaseEquipmentItem(NullGBaseModel):
     sortOrder: Optional[int] = Field(description="", default=None)
     vehicleSlots: Optional[int] = Field(description="", default=None)
     supportVehicleSlots: Optional[int] = Field(description="", default=None)
-    equipmentTypeId: Optional[int] = Field(description="", default=None)
 
 
 class WeaponItem(BaseEquipmentItem):

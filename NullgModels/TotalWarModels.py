@@ -646,19 +646,6 @@ class TotalWarUnitDataBase(NullGBaseModel):
         default=None,
         examples=[0, 1, 2, 3, 4, 5, 6, 7]
     )
-    unitTypeId: Optional[int] = Field(
-        description="Primary unit type (see UnitType enum). "
-                    "0=aerospace, 1=dropship, 2=mech, 3=infantry, 4=vehicle.",
-        default=None,
-        examples=[0, 1, 2, 3, 4]
-    )
-    unitSubtypeId: Optional[int] = Field(
-        description="Specific unit subtype (see UnitSubtype enum). "
-                    "Examples: 3=BattleMech, 11=OmniMech, 4=Combat Vehicle, "
-                    "2=Battle Armor, etc.",
-        default=None,
-        examples=[0, 1, 2, 3, 4, 11, 13]
-    )
 
 
 class TotalWarBattleMechData(TotalWarUnitDataBase):
