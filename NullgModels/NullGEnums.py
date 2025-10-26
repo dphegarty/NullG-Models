@@ -422,3 +422,26 @@ class TurretType(IntEnum):
     none = 0
     single = 1
     duel = 2
+
+class JumpJetTyp(IntEnum):
+    """
+    Jump Jet configuration types for units
+
+    Describes what type of jump jet a unit has.
+
+    Attributes:
+        none: No jump jet (ID: 0).
+        regular: Regular jump jet (ID: 1).
+        improved: Improved jump jet (ID: 2).
+        umu: UMU jump jet (ID: 3).
+
+    Examples:
+        >>> JumpJetTyp.regular
+        1
+        >>> JumpJetTyp.improved.name
+        'improved'
+    """
+    none = 0
+    regular = 1
+    improved = 2
+    umu = 3
