@@ -24,7 +24,7 @@ from pydantic import Field
 
 from NullgModels.EquipmentModels import EquipmentItem
 from NullgModels.NullGBaseModels import NullGBaseModel
-from NullgModels.NullGEnums import TurretType, JumpJetTyp
+from NullgModels.NullGEnums import TurretType, JumpJetTyp, JumpJetType
 
 
 class TotalWarBasicComponent(NullGBaseModel):
@@ -1032,7 +1032,7 @@ class TotalWarVehicleData(TotalWarUnitDataBase):
         description="Additional crew or passenger combat seats.",
         default=None
     )
-    jumpjetType: Optional[int] = Field(
+    jumpjetType: Optional[JumpJetType] = Field(
         description="Jump jet type (for jump-capable vehicles).",
         default=None
     )
