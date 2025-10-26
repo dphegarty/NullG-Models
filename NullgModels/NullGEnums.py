@@ -445,3 +445,19 @@ class JumpJetType(IntEnum):
     regular = 1
     improved = 2
     umu = 3
+
+class RoleType(IntEnum):
+    ambusher = 0
+    attack_fighter = 1
+    brawler = 2
+    dogfighter = 3
+    fast_dogfighter = 4
+    fire_support = 5
+    interceptor = 6
+    juggernaut = 7
+    missile_boat = 8
+    scout = 9
+    skirmisher = 10
+    sniper = 11
+    striker = 12
+    transport = 13
