@@ -436,9 +436,9 @@ class JumpJetType(IntEnum):
         umu: UMU jump jet (ID: 3).
 
     Examples:
-        >>> JumpJetTyp.regular
+        >>> JumpJetType.regular
         1
-        >>> JumpJetTyp.improved.name
+        >>> JumpJetType.improved.name
         'improved'
     """
     none = 0
