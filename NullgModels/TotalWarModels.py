@@ -24,7 +24,7 @@ from pydantic import Field
 
 from NullgModels.EquipmentModels import EquipmentItem
 from NullgModels.NullGBaseModels import NullGBaseModel
-from NullgModels.NullGEnums import TurretType, JumpJetTyp, JumpJetType
+from NullgModels.NullGEnums import TurretType, JumpJetType
 
 
 class TotalWarBasicComponent(NullGBaseModel):
