@@ -4,6 +4,7 @@ from pydantic import Field, field_validator, ValidationInfo
 
 from NullgModels.AlphaStrikeModels import AlphaStrikeData
 from NullgModels.Constants import *
+from NullgModels.InventoryModels import PilotData
 from NullgModels.NullGBaseModels import NullGBaseModel
 from NullgModels.NullGEnums import UnitType
 from NullgModels.TotalWarModels import TotalWarDropshipData, TotalWarInfantryData, TotalWarAerospaceData, \
@@ -204,6 +205,7 @@ class UnitData(NullGBaseModel):
     bvResults: Optional[Dict[str, Any]] = Field(description="Battle Value v2 Calculation Data", default=None)
     statistics: Optional[Dict[str, Any]] = Field(description="Different type of statistics about the unit",
                                                  default=None)
+    pilotData: Optional[List[PilotData]] = Field(description="List of Pilot Data class that describe a pilot", default_factory=list)
 
     @field_validator(FIELD_TOTAL_WAR, mode='after')
     @classmethod
