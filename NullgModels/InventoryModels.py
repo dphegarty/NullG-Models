@@ -1,11 +1,11 @@
 # Inventory Models
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import Field
 
 from NullgModels.BattletechModels import UnitData
 from NullgModels.NullGBaseModels import NullGBaseModel
-from NullgModels.NullGEnums import InventoryStorageType
+from NullgModels.NullGEnums import InventoryStorageType, GameSystem
 from NullgModels.PilotModels import PilotData
 
 
