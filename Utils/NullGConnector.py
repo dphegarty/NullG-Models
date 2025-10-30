@@ -1,10 +1,12 @@
-import os
+
 from typing import List, Union
 
 import requests
 from pydantic import TypeAdapter
+from NullG_Constants import *
+from NullgModels.NullGEnums import EquipmentType
 
-from NullgModels.ServerModels import ServerResponseItem
+from NullgModels.ServerModels import ServerResponseItem, SearchFilter
 import NullgModels.BattletechModels as BattletechModels
 import NullgModels.HardwarModels as HardwarModels
 import NullgModels.EquipmentModels as EquipmentModels
@@ -82,16 +84,18 @@ class NullGConnector:
         self.base_url = base_url
         self.api_key = api_key
 
-    def get_unit_by_id(self, params) -> List:
+    def get_unit_by_id(self,
+                       item_id: str,
+                       expand: bool = False
+                       ) -> List[Union[BattletechModels.UnitData,BattletechModels.UnitDataExtended]]:
         """Retrieve a specific unit by its unique identifier.
 
         Fetches a single unit from the database using its UUID. Optionally
         expands related data like equipment details, faction information, etc.
 
         Args:
-            params (dict): Dictionary containing:
-                - id (str): UUID of the unit to retrieve
-                - expand (bool): Whether to expand nested/related data
+            item_id (str): UUID of the unit to retrieve.
+            expand (bool): Whether to expand nested/related data. Defaults to False.
 
         Returns:
             List: List containing the parsed unit model object(s). Type depends
@@ -103,22 +107,18 @@ class NullGConnector:
 
         Examples:
             >>> api = NullGConnector()
-            >>> params = {
-            ...     "id": "78a802b4-2d25-4750-b6fd-2dad78a88531",
-            ...     "expand": True
-            ... }
-            >>> units = api.get_unit_by_id(params)
+            >>> item_id = "78a802b4-2d25-4750-b6fd-2dad78a88531",
+            >>> expand = True
+            >>> units = api.get_unit_by_id(item_id=item_id, expand=expand))
             >>> print(units[0].name, units[0].model)
         """
-        unit_id = params['id']
-        expand = params['expand']
-        endpoint = f'/v4/unit/find'
-        query_params = {'item_id': unit_id, 'expand': expand}
+        endpoint = ENDPOINT_UNIT_FIND
+        query_params = {'item_id': item_id, 'expand': expand}
         response = self._make_rest_call(endpoint, params=query_params)
         models = self._parse_items(response)
         return models
 
-    def search_units(self, params) -> List:
+    def search_units(self, search_filter: SearchFilter) -> List[BattletechModels.UnitData]:
         """Search for units using complex filter criteria.
 
         Performs a filtered search across the unit database using MongoDB-style
@@ -126,8 +126,7 @@ class NullGConnector:
         nested properties. Can include projection to limit returned fields.
 
         Args:
-            params (dict): Dictionary containing:
-                - payload (dict): SearchFilter object as dict with:
+            search_filter (SearchFilter): Dictionary containing:
                     - filter (dict): MongoDB query filter
                     - project (dict, optional): Field projection
                     - page (int, optional): Page number
@@ -140,45 +139,36 @@ class NullGConnector:
             ValueError: If no units match the filter or response is invalid.
 
         Examples:
-            >>> # Search for Clan mechs with specific equipment
-            >>> params = {
-            ...     "payload": {
-            ...         "filter": {
-            ...             "name": "Warhammer",
-            ...             "unitTypeId": 2,
-            ...             "totalWar.equipmentList.name": "Heavy PPC"
-            ...         },
-            ...         "project": {"name": 1, "bv": 1}
-            ...     }
+            >>> # Search for mechs with specific equipment
+            >>> search_filter = SearchFilter()
+            >>> search_filter.filter = {
+            ...     "name": "Warhammer",
+            ...     "unitTypeId": 2,
+            ...     "totalWar.equipmentList.name": "Heavy PPC"
             ... }
-            >>> units = api.search_units(params)
+            ... search_filter.project = {"name": 1, "bv": 1}
+            >>> units = api.search_units(search_filter)
 
             >>> # Search with pagination
-            >>> params = {
-            ...     "payload": {
-            ...         "filter": {"techbase": "Clan"},
-            ...         "page": 1,
-            ...         "itemsPerPage": 20
-            ...     }
-            ... }
-            >>> units = api.search_units(params)
+            >>> search_filter.filter = {"techbase": "Clan"}
+            ... search_filter.page = 1,,
+            ... search_filter.itemsPerPage = 20
+            >>> units = api.search_units(search_filter=search_filter))
         """
         method = 'post'
-        json_data = params['payload']
-        endpoint = '/v4/unit/find'
-        response = self._make_rest_call(endpoint, json_data=json_data, method=method)
+        endpoint = ENDPOINT_UNIT_FIND
+        response = self._make_rest_call(endpoint, json_data=search_filter.model_dump(), method=method)
         models = self._parse_items(response)
         return models
 
-    def get_box_set(self, params) -> List:
+    def get_box_set_by_id(self, item_id: str) -> List[BattletechModels.BoxsetItem]:
         """Retrieve box set information by barcode or ID.
 
         Fetches details about a Battletech product box set, including contained
         miniatures, point values, and product information.
 
         Args:
-            params (dict): Dictionary containing:
-                - boxSetId (str): Barcode or unique identifier of the box set
+            item_id (str): Barcode or unique identifier of the box set
 
         Returns:
             List: List of BoxsetItem model objects for the specified box set.
@@ -187,19 +177,51 @@ class NullGConnector:
             ValueError: If no box set is found with the given ID.
 
         Examples:
-            >>> params = {"boxSetId": "0850011819135"}
-            >>> box_sets = api.get_box_set(params)
+            >>> item_id = "0850011819135"
+            >>> box_sets = api.get_box_set(item_id=item_id))
             >>> for box_set in box_sets:
             ...     print(f"{box_set.name}: {box_set.minPoints}-{box_set.maxPoints} pts")
         """
-        box_set_id = params['boxSetId']
-        endpoint = f'/v4/boxset/find'
-        query_params = {'item_id': box_set_id}
+        endpoint = ENDPOINT_BOXSET_FIND
+        query_params = {'item_id': item_id}
         response = self._make_rest_call(endpoint, params=query_params)
         models = self._parse_items(response)
         return models
 
-    def search_mul(self, params) -> List:
+    def search_box_sets(self, search_filter: SearchFilter) -> List[BattletechModels.BoxsetItem]:
+        """Search for box set using complex filter criteria.
+
+        Performs a filtered search across the bax set database using MongoDB-style
+        query syntax. Supports filtering by name, model count, bv range.
+        Can include projection to limit returned fields.
+
+        Args:
+            params (dict): Dictionary containing:
+                - payload (dict): SearchFilter object as dict with:
+                    - filter (dict): MongoDB query filter
+                    - project (dict, optional): Field projection
+                    - page (int, optional): Page number
+                    - itemsPerPage (int, optional): Results per page
+
+        Returns:
+            List: List of parsed boxset model objects matching the filter criteria.
+
+        Raises:
+            ValueError: If no boxset match the filter or response is invalid.
+
+        Examples:
+            >>> # Search for Clan mechs with specific equipment
+            >>> search_filter = SearchFilter()
+            >>> search_filter.filter = {"name": "Comstar Battle Level II"}
+            >>> units = api.search_units(search_filter))
+        """
+        method = 'post'
+        endpoint = ENDPOINT_BOXSET_FIND
+        response = self._make_rest_call(endpoint, json_data=search_filter.model_dump(), method=method)
+        models = self._parse_items(response)
+        return models
+
+    def search_mul(self, search_filter: SearchFilter) -> List[BattletechModels.MULUnitItem]:
         """Search the Master Unit List (MUL) database.
 
         Queries the official Master Unit List database for units by various
@@ -217,24 +239,22 @@ class NullGConnector:
 
         Examples:
             >>> # Find MUL entry by NullG unit ID
-            >>> params = {
-            ...     "payload": {
-            ...         "filter": {
+            >>> search_filter = SearchFilter()
+            >>> search_filter.filter = {
             ...             "nullgId": "60febaa9-02a9-4da7-8180-564a35300763"
             ...         }
-            ...     }
-            ... }
-            >>> mul_units = api.search_mul(params)
+            >>> mul_units = api.search_mul(search_filter)
             >>> print(mul_units[0].mulId, mul_units[0].factions)
         """
         method = 'post'
-        json_data = params['payload']
-        endpoint = '/v4/mul/find'
-        response = self._make_rest_call(endpoint, json_data=json_data, method=method)
+        endpoint = ENDPOINT_MUL_FIND
+        response = self._make_rest_call(endpoint, json_data=search_filter.model_dump(), method=method)
         models = self._parse_items(response)
         return models
 
-    def get_eras(self, params) -> List:
+    def get_eras(self, era_id: int = None,
+                 year: int = None,
+                 search_filter: SearchFilter = None) -> List[BattletechModels.EraItem]:
         """Retrieve Battletech timeline era information.
 
         Fetches era data by year, era ID, or custom filter criteria. Eras
@@ -242,10 +262,9 @@ class NullGConnector:
         Clan Invasion, Dark Age).
 
         Args:
-            params (dict, optional): Dictionary that can contain:
-                - year (int): Get eras active in a specific year
-                - eraId (int): Get a specific era by ID
-                - payload (dict): SearchFilter for complex era queries
+            year (int): Get eras active in a specific year
+            era_id (int): Get a specific era by ID
+            search_filter (SearchFilter): for complex era queries
                 If None or empty, returns all eras.
 
         Returns:
@@ -256,41 +275,39 @@ class NullGConnector:
 
         Examples:
             >>> # Get eras for a specific year
-            >>> eras = api.get_eras(params={"year": 3069})
+            >>> eras = api.get_eras(year=3069)
             >>> for era in eras:
             ...     print(f"{era.name}: {era.yearStart}-{era.yearEnd}")
 
             >>> # Get specific era by ID
-            >>> eras = api.get_eras(params={"eraId": 5})
+            >>> eras = api.get_eras(era_id = 5})
 
             >>> # Get all eras
-            >>> all_eras = api.get_eras(params=None)
+            >>> all_eras = api.get_eras()
         """
         query_params = None
         json_data = None
         method = 'get'
-        endpoint = '/v4/eras/find'
-        if params is not None:
-            if 'year' in params:
-                query_params = {'year': params['year']}
-            elif 'eraId' in params:
-                query_params = {'eraId': params['eraId']}
-            elif 'payload' in params:
-                json_data = params['payload']
-                method = 'post'
+        endpoint = ENDPOINT_ERA_FIND
+        if year is not None:
+            query_params = {'year': year}
+        elif era_id is not None:
+            query_params = {'eraId': era_id}
+        elif search_filter is not None:
+            json_data = search_filter.model_dump()
+            method = 'post'
         response = self._make_rest_call(endpoint, params=query_params, method=method, json_data=json_data)
         models = self._parse_items(response)
         return models
 
-    def search_equipment(self, params) -> List:
+    def search_equipment(self, search_filter: SearchFilter) -> List[EquipmentModels.EquipmentItem]:
         """Search the equipment database.
 
         Queries the equipment database for weapons, ammunition, and other
         equipment items using MongoDB-style filters.
 
         Args:
-            params (dict): Dictionary containing:
-                - payload (dict): SearchFilter object with equipment-specific filters
+            search_filter (SearchFilter): SearchFilter object with equipment-specific filters
 
         Returns:
             List: List of EquipmentItem model objects matching the search.
@@ -300,57 +317,22 @@ class NullGConnector:
 
         Examples:
             >>> # Search for specific ammo
-            >>> params = {
-            ...     "payload": {
-            ...         "filter": {"name": "AC/10 Ammo"},
-            ...         "project": {"name": 1, "item": 1}
-            ...     }
+            >>> search_filter = SearchFilter()
+            >>> search_filter.filter = {
+            ...         "name": "AC/10 Ammo"}
             ... }
-            >>> equipment = api.search_equipment(params)
+            ... search_filter.project = {"name": 1, "item": 1}
+            >>> equipment = api.search_equipment(search_filter)
 
             >>> # Search by equipment type
-            >>> params = {
-            ...     "payload": {
-            ...         "filter": {"item.type": "weapon"}
+            >>> search_filter.filter = {"equipmentTypeId": EquipmentType.weapon}
             ...     }
             ... }
-            >>> weapons = api.search_equipment(params)
+            >>> weapons = api.search_equipment(search_filter)
         """
         method = 'post'
-        json_data = params['payload']
-        endpoint = '/v4/equipment/find'
-        response = self._make_rest_call(endpoint, json_data=json_data, method=method)
-        return self._parse_items(response)
-
-    def read_resource(self, params) -> List:
-        """Read a generic resource list from the API.
-
-        Retrieves reference data lists such as unit types, factions, roles,
-        weight classes, and other enumeration-style resources.
-
-        Args:
-            params (dict): Dictionary containing:
-                - resource (str): Name of the resource to retrieve
-                              (e.g., "unit_types", "factions", "roles")
-
-        Returns:
-            List: List of resource items (typically BasicItem or dict objects).
-
-        Raises:
-            ValueError: If the resource name is invalid or not found.
-
-        Examples:
-            >>> # Get list of unit types
-            >>> unit_types = api.read_resource(params={"resource": "unit_types"})
-            >>> for ut in unit_types:
-            ...     print(f"{ut['id']}: {ut['name']}")
-
-            >>> # Get factions list
-            >>> factions = api.read_resource(params={"resource": "factions"})
-        """
-        method = 'get'
-        endpoint = f'/v4/resources/list/{params["resource"]}'
-        response = self._make_rest_call(endpoint, method=method)
+        endpoint = ENDPOINT_EQUIPMENT_FIND
+        response = self._make_rest_call(endpoint, json_data=search_filter.model_dump(), method=method)
         return self._parse_items(response)
 
     def _make_rest_call(self, endpoint, params=None, data=None, json_data=None, method='get'):
