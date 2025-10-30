@@ -4,7 +4,7 @@ from pydantic import Field, field_validator, ValidationInfo
 
 from NullgModels.AlphaStrikeModels import AlphaStrikeData
 from NullgModels.Constants import *
-from NullgModels.InventoryModels import PilotData
+from NullgModels.PilotModels import PilotData
 from NullgModels.NullGBaseModels import NullGBaseModel
 from NullgModels.NullGEnums import UnitType
 from NullgModels.TotalWarModels import TotalWarDropshipData, TotalWarInfantryData, TotalWarAerospaceData, \
