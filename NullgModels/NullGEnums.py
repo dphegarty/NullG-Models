@@ -486,3 +486,28 @@ class RoleType(IntEnum):
     sniper = 11
     striker = 12
     transport = 13
+
+class TotalWarEquipmentItemType:
+    """
+    Describes the type of equipment item in the Total War Equipment item record
+
+    Attributes:
+        ammo: Ammo item
+        equipment: Equipment item
+        bay: Bay item
+        weaponbay: Weapons Bay (used on Dropships and other large craft)
+
+    Examples:
+        >>> TotalWarEquipmentItemType.ammo
+        'ammo'
+        >>> TotalWarEquipmentItemType.equipment
+        'equipment'
+        >>> TotalWarEquipmentItemType.bay
+        'bay'
+        >>> TotalWarEquipmentItemType.weaponbay
+        'weaponbay'
+    """
+    ammo = "ammo"
+    equipment = "equipment"
+    bay = "bay"
+    weaponbay = "weaponbay"

@@ -24,7 +24,7 @@ from pydantic import Field
 
 from NullgModels.EquipmentModels import EquipmentItem
 from NullgModels.NullGBaseModels import NullGBaseModel
-from NullgModels.NullGEnums import TurretType, JumpJetType
+from NullgModels.NullGEnums import TurretType, JumpJetType, TotalWarEquipmentItemType
 
 
 class TotalWarBasicComponent(NullGBaseModel):
@@ -403,12 +403,12 @@ class TotalWarEquipmentItem(NullGBaseModel):
         default=None,
         examples=["(TC)", "(CL)", "(OS)", "(R)", "(CASE)", "(Artemis IV)", ""]
     )
-    type: str = Field(
+    type: TotalWarEquipmentItemType = Field(
         description="Equipment category type. "
-                    "Common types: weapon, equipment, ammo, heatsink, armor, structure, "
-                    "engine, gyro, cockpit, actuator.",
+                    "Common types: weaponbay, equipment, ammo."
+                    "This can be used to determine the type of equipment and how it interacts with the mech or vehicle.",
         default=None,
-        examples=["weapon", "equipment", "ammo", "heatsink", "armor"]
+        examples=["weaponbay", "equipment", "ammo"]
     )
 
 
@@ -633,6 +633,17 @@ class TotalWarUnitDataBase(NullGBaseModel):
         default=None,
         examples=[120, 168, 256, 384]
     )
+    extraOptions: Optional[Dict[str, bool]] = Field(
+        description="Additional construction options as flag dictionary. "
+                    "Keys are option names, values are True if present. "
+                    "Examples: MASC, TSM, Partial Wing, etc.",
+        default=None,
+        examples=[
+            {"MASC": True, "TSM": True},
+            {"Partial Wing": True},
+            {}
+        ]
+    )
     fireControl: Optional[str] = Field(
         description="Fire control system. "
                     "Affects weapon accuracy and targeting.",
@@ -732,17 +743,6 @@ class TotalWarBattleMechData(TotalWarUnitDataBase):
         default_factory=TotalWarEngineComponent,
         examples=["300 Fusion Engine", "375 XL Engine", "400 Light Engine"]
     )
-    extraOptions: Optional[Dict[str, bool]] = Field(
-        description="Additional construction options as flag dictionary. "
-                    "Keys are option names, values are True if present. "
-                    "Examples: MASC, TSM, Partial Wing, etc.",
-        default=None,
-        examples=[
-            {"MASC": True, "TSM": True},
-            {"Partial Wing": True},
-            {}
-        ]
-    )
     gyro: Optional[TotalWarGyroComponent] = Field(
         description="Gyroscope type. Affects critical slots and weight. "
                     "Standard (4 slots, 3-4 tons), XL (6 slots, 2 tons), "
@@ -835,10 +835,6 @@ class TotalWarAerospaceData(TotalWarUnitDataBase):
         description="Whether construction has been validated.",
         default=None
     )
-    extraOptions: Optional[Dict[str, bool]] = Field(
-        description="Additional construction options flags.",
-        default=None
-    )
     engine: Optional[TotalWarEngineComponent] = Field(
         description="Engine description string. Format: '[Rating] [Type] Engine'.",
         default_factory=TotalWarEngineComponent,
@@ -908,10 +904,6 @@ class TotalWarInfantryData(TotalWarUnitDataBase):
         description="Whether construction has been validated.",
         default=None
     )
-    extraOptions: Optional[Dict[str, bool]] = Field(
-        description="Additional construction options.",
-        default=None
-    )
     structure: Optional[TotalWarStructureComponent] = Field(
         description="Structure type (battle armor).",
         default=None,
@@ -946,7 +938,7 @@ class TotalWarInfantryData(TotalWarUnitDataBase):
     )
     isExoskeleton: Optional[bool] = Field(
         description="Whether this is exoskeleton-equipped infantry (light power armor).",
-        default=None
+        default=False
     )
 
 
@@ -992,10 +984,6 @@ class TotalWarVehicleData(TotalWarUnitDataBase):
         description="Engine type and rating.",
         default_factory=TotalWarEngineComponent,
         examples=["300 Fusion Engine", "375 XL Engine", "400 Light Engine"]
-    )
-    extraOptions: Optional[Dict[str, bool]] = Field(
-        description="Additional construction options.",
-        default=None
     )
     turretType: Optional[TurretType] = Field(
         description="Turret configuration (None, Single, Dual, Chin, Sponson).",
