@@ -119,7 +119,18 @@ class WeaponItem(BaseEquipmentItem):
     minimumRange: Optional[int] = Field(description="", default=None)
     shortAV: Optional[float] = Field(description="", default=None)
     shortRange: Optional[int] = Field(description="", default=None)
-
+    capacitorBv: Optional[int] = Field(
+        description="Unique to Inner Sphere PPCs. This is the additional BV cost for"
+                    "attaching a capacitor to the PPC.",
+        default=0,
+        examples=[0, 1, 2]
+    )
+    capacitorDamage: Optional[int] = Field(
+        description="Unique to Inner Sphere PPCs. This is the damage when a"
+                    "capacitor attached to a PPC is destroyed by a critical hit",
+        default=0,
+        examples=[0, 1, 2]
+    )
 
 class OtherItem(BaseEquipmentItem):
     bayType: Optional[str] = Field(description="", default=None)
