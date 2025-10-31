@@ -487,7 +487,7 @@ class RoleType(IntEnum):
     striker = 12
     transport = 13
 
-class TotalWarEquipmentItemType(Enum):
+class TotalWarEquipmentItemType(str, Enum):
     """
     Describes the type of equipment item in the Total War Equipment item record
 
