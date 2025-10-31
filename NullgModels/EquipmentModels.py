@@ -258,4 +258,4 @@ class EquipmentItem(NullGBaseModel):
             else:
                 raise ValueError('Equipment Item Type does not exist')
         else:
-            raise ValueError('Item data not supplied')
+            return v
