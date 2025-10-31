@@ -207,7 +207,7 @@ class UnitData(NullGBaseModel):
                                                  default=None)
     pilotData: Optional[List[PilotData]] = Field(description="List of Pilot Data class that describe a pilot", default_factory=list)
 
-    @field_validator(FIELD_TOTAL_WAR, mode='after')
+    @field_validator(FIELD_TOTAL_WAR, mode='before')
     @classmethod
     def validate_totalwar_type(cls, v: Dict, info: ValidationInfo):
         if v is not None and isinstance(v, dict):
@@ -250,7 +250,8 @@ class UnitDataExtended(UnitData):
         TotalWarVehicleExtendedData
     ]] = Field(description="Extended Total War Data that includes fill equipment data", default=None)
 
-    @field_validator(FIELD_TOTAL_WAR, mode='after')
+    @field_validator(FIELD_TOTAL_WAR, mode='before')
+    @classmethod
     def validate_totalwar_type(cls, v: Dict, info: ValidationInfo):
         if v is not None and isinstance(v, dict):
             if FIELD_UNIT_TYPE_ID in info.data and isinstance(info.data[FIELD_UNIT_TYPE_ID], int):

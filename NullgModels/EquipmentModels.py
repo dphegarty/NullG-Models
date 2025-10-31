@@ -223,7 +223,7 @@ class EquipmentItem(NullGBaseModel):
     StructureItem, ConversionItem, ArmorItem, ManipulatorItem, MyomerItem, WeaponBayItem,
     EnhancementItem]] = Field(description="", default=None)
 
-    @field_validator('item', mode='after')
+    @field_validator('item', mode='before')
     @classmethod
     def validate_item_type(cls, v: Dict, info: ValidationInfo):
         if v is not None and isinstance(v, dict):
