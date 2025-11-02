@@ -1,7 +1,7 @@
 ## Equipment BaseModels
 from typing import Optional, List, Union, Dict
 
-from pydantic import Field, field_validator, ValidationInfo
+from pydantic import Field, field_validator, ValidationInfo, BaseModel
 
 from NullgModels.Constants import FIELD_EQUIPMENT_TYPE_ID
 from NullgModels.NullGBaseModels import NullGBaseModel
@@ -18,22 +18,57 @@ class EquipmentAlphaStrike(NullGBaseModel):
                                           default=None)
 
 
-class EquipmentTypeData(NullGBaseModel):
+class EquipmentTypeData(BaseModel):
     """
     Data class for equipment type information.
 
     Key characteristics about the equipment.
     """
     isBeagleActiveProbe: bool = Field(description="", default=False, examples=[True, False])
-    isInfantryBurst: bool = Field(description="Is consider burst weapon against infantry", default=False, examples=[True, False])
     isInfantryEncumbered: bool = Field(description="Does this encumber infantry", default=False, examples=[True, False])
+    isECM: bool = Field(description="", default=False, examples=[True, False])
+    isAngelECM: bool = Field(description="", default=False, examples=[True, False])
+    isWatchdog: bool = Field(description="", default=False, examples=[True, False])
+    isNOVA: bool = Field(description="", default=False, examples=[True, False])
+    isBloodhound: bool = Field(description="", default=False, examples=[True, False])
+    isEWEquipment: bool = Field(description="", default=False, examples=[True, False])
+    isMiscType: bool = Field(description="", default=False, examples=[True, False])
+    isBAManipulator: bool = Field(description="", default=False, examples=[True, False])
+    isTAG: bool = Field(description="", default=False, examples=[True, False])
+    isDefensive: bool = Field(description="Is this considered defensive equipment", default=False, examples=[True, False])
+    isDisplayed: bool = Field(description="Show this be displayed on a record sheet", default=False, examples=[True, False])
+    isEditable: bool = Field(description="Is this an editable critical slot", default=False, examples=[True, False])
+    isEquipment: bool = Field(description="Is this a Equipment verse a weapon", default=False, examples=[True, False])
+    isExplosive: bool = Field(description="Is Explosive", default=False, examples=[True, False])
+    isFixed: bool = Field(description="Are the critical slots fixed and cannot be move around", default=False, examples=[True, False])
+    isHittable: bool = Field(description="Are these critical slots damagable", default=False, examples=[True, False])
+    isLPMEnabled: bool = Field(description="Can a Pulse Laser Modular be used", default=False, examples=[True, False])
+    isLegAttack: bool = Field(description="Does this confer the Leg Attack ability", default=False, examples=[True, False])
+    isMechanized: bool = Field(description="Does this confer the Mechanized ability", default=False, examples=[True, False])
+    isMelee: bool = Field(description="Is this a melee verse ranged weapon", default=False, examples=[True, False])
+    isMisc: bool = Field(
+        description="Is this miscellaneous equipment, does not count as a weapon or defensive", default=False, examples=[True, False])
+    isPair: bool = Field(description="Does this come in pairs, like claws or talons", default=False, examples=[True, False])
+    isSingleHex: bool = Field(description="Single Hex range", default=False, examples=[True, False])
+    isSwarmAttack: bool = Field(description="Does this confer the Swam Attack ability", default=False, examples=[True, False])
+    isTrackedEquipment: bool = Field(description="Does this item get tracked on the record sheet",
+                                               default=False, examples=[True, False])
+    isTurret: bool = Field(description="Is this a turret", default=False, examples=[True, False])
+    isUnique: bool = Field(description="Is this item limited to 1", default=False, examples=[True, False])
+    isVariable: bool = Field(description="Deos this have variable damage", default=False, examples=[True, False])
+    isVariableCrit: bool = Field(description="Does this equipment have variable critical slot count",
+                                           default=False, examples=[True, False])
+    isVariableMass: bool = Field(description="Does this equipment have variable mass", default=False, examples=[True, False])
+    isWeapon: bool = Field(description="Is the considered a weapon", default=False, examples=[True, False])
+
+
+class WeaponClassification(BaseModel):
+    isInfantryBurst: bool = Field(description="Is consider burst weapon against infantry", default=False, examples=[True, False])
     isInfantryNonPen: bool = Field(description="Does this count as non-penetrating against infantry", default=False, examples=[True, False])
     isInfantryWeapon: bool = Field(description="Does this count as an infantry", default=False, examples=[True, False])
     isMML: bool = Field(description="", default=False, examples=[True, False])
     isATM: bool = Field(description="", default=False, examples=[True, False])
     isISCenturionWeaponSystem: bool = Field(description="", default=False, examples=[True, False])
-    isECM: bool = Field(description="", default=False, examples=[True, False])
-    isAngelECM: bool = Field(description="", default=False, examples=[True, False])
     isLRT: bool = Field(description="", default=False, examples=[True, False])
     isSRT: bool = Field(description="", default=False, examples=[True, False])
     isSRM: bool = Field(description="", default=False, examples=[True, False])
@@ -44,15 +79,8 @@ class EquipmentTypeData(NullGBaseModel):
     isRotary: bool = Field(description="", default=False, examples=[True, False])
     isRocketLauncher: bool = Field(description="", default=False, examples=[True, False])
     isAERO: bool = Field(description="", default=False, examples=[True, False])
-    isWatchdog: bool = Field(description="", default=False, examples=[True, False])
-    isNOVA: bool = Field(description="", default=False, examples=[True, False])
-    isBloodhound: bool = Field(description="", default=False, examples=[True, False])
-    isEWEquipment: bool = Field(description="", default=False, examples=[True, False])
-    isMiscType: bool = Field(description="", default=False, examples=[True, False])
-    isBAManipulator: bool = Field(description="", default=False, examples=[True, False])
-    isTAG: bool = Field(description="", default=False, examples=[True, False])
-    isStreak: bool = Field(description="Is there a Streak Missile System", default=False, examples=[True, False])
-    isiATM: bool = Field(description="Is there an Improved ATM", default=False, examples=[True, False])
+    isStreak: bool = Field(description="", default=False, examples=[True, False])
+    isiATM: bool = Field(description="", default=False, examples=[True, False])
     isAMS: bool = Field(description="Is the an Anti-Missile System", default=False, examples=[True, False])
     isAntiAir: bool = Field(description="Is this Anti-Air", default=False, examples=[True, False])
     isAntiInfantry: bool = Field(description="Is this Anti-Infantry", default=False, examples=[True, False])
@@ -63,47 +91,23 @@ class EquipmentTypeData(NullGBaseModel):
     isBallistic: bool = Field(description="Is this a Ballistic type weapon", default=False, examples=[True, False])
     isCapital: bool = Field(description="Is this a capital weapon", default=False, examples=[True, False])
     isCluster: bool = Field(description="Is this a cluster weapon", default=False, examples=[True, False])
-    isDefensive: bool = Field(description="Is this considered defensive equipment", default=False, examples=[True, False])
     isDirect: bool = Field(description="Is this a Direct fire weapon", default=False, examples=[True, False])
-    isDisplayed: bool = Field(description="Show this be displayed on a record sheet", default=False, examples=[True, False])
-    isEditable: bool = Field(description="Is this an editable critical slot", default=False, examples=[True, False])
     isEnergy: bool = Field(description="Is this an Energy weapon", default=False, examples=[True, False])
-    isEquipment: bool = Field(description="Is this a Equipment verse a weapon", default=False, examples=[True, False])
-    isExplosive: bool = Field(description="Is Explosive", default=False, examples=[True, False])
-    isFixed: bool = Field(description="Are the critical slots fixed and cannot be move around", default=False, examples=[True, False])
     isFlame: bool = Field(description="Is Flame weapon", default=False, examples=[True, False])
     isHeatCausing: bool = Field(description="Is Heat causing, example plasma", default=False, examples=[True, False])
     isHeavyWeapon: bool = Field(description="Is this a heavy weapon for infantry", default=False, examples=[True, False])
-    isHittable: bool = Field(description="Are these critical slots damagable", default=False, examples=[True, False])
     isIndirect: bool = Field(description="Is this indirect", default=False, examples=[True, False])
-    isLPMEnabled: bool = Field(description="Can a Pulse Laser Modular be used", default=False, examples=[True, False])
-    isLegAttack: bool = Field(description="Does this confer the Leg Attack ability", default=False, examples=[True, False])
-    isMechanized: bool = Field(description="Does this confer the Mechanized ability", default=False, examples=[True, False])
-    isMelee: bool = Field(description="Is this a melee verse ranged weapon", default=False, examples=[True, False])
-    isMisc: bool = Field(
-        description="Is this miscellaneous equipment, does not count as a weapon or defensive", default=False, examples=[True, False])
-    isMissile: bool = Field(description="Is this a missile type", default=False, examples=[True, False])
-    isOneShot: bool = Field(description="Is this a one-shot weapon", default=False, examples=[True, False])
-    isPPCCapacitorEnabled: bool = Field(description="Can a PPC Capacitor be paired", default=False, examples=[True, False])
-    isPair: bool = Field(description="Does this come in pairs, like claws or talons", default=False, examples=[True, False])
     isPhysical: bool = Field(description="Is this a physical weapon like Swords", default=False, examples=[True, False])
     isPulse: bool = Field(description="Is this a pulse weapon", default=False, examples=[True, False])
     isRapidFire: bool = Field(description="Does this fire multiple 'shots' like Ultra/Rotary ACs",
                                         default=False, examples=[True, False])
-    isSingleHex: bool = Field(description="Single Hex range", default=False, examples=[True, False])
+    isMissile: bool = Field(description="Is this a missile type", default=False, examples=[True, False])
+    isOneShot: bool = Field(description="Is this a one-shot weapon", default=False, examples=[True, False])
+    isPPCCapacitorEnabled: bool = Field(description="Can a PPC Capacitor be paired", default=False, examples=[True, False])
     isSubCapital: bool = Field(description="Is this Sub-capital", default=False, examples=[True, False])
-    isSwarmAttack: bool = Field(description="Does this confer the Swam Attack ability", default=False, examples=[True, False])
     isSwitchable: bool = Field(description="", default=False, examples=[True, False])
-    isTrackedEquipment: bool = Field(description="Does this item get tracked on the record sheet",
-                                               default=False, examples=[True, False])
-    isTurret: bool = Field(description="Is this a turret", default=False, examples=[True, False])
-    isUnique: bool = Field(description="Is this item limited to 1", default=False, examples=[True, False])
-    isVariable: bool = Field(description="Deos this have variable damage", default=False, examples=[True, False])
-    isVariableCrit: bool = Field(description="Does this equipment have variable critical slot count",
-                                           default=False, examples=[True, False])
-    isVariableMass: bool = Field(description="Does this equipment have variable mass", default=False, examples=[True, False])
-    isWeapon: bool = Field(description="Is the considered a weapon", default=False, examples=[True, False])
     useTargetingComputer: bool = Field(description="Can this use a targeting computer", default=False, examples=[True, False])
+
 
 class EquipmentUnitTypes(NullGBaseModel):
     battlearmor: Optional[bool] = Field(default=False, description="Can be used by Battle Armor")
@@ -159,6 +163,7 @@ class WeaponItem(BaseEquipmentItem):
         default=0,
         examples=[0, 1, 2]
     )
+    classification: WeaponClassification = Field(description="Weapon classification data", default_factory=WeaponClassification)
 
 class OtherItem(BaseEquipmentItem):
     bayType: Optional[str] = Field(description="", default=None)
