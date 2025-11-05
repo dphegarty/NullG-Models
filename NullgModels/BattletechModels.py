@@ -6,7 +6,7 @@ from NullgModels.AlphaStrikeModels import AlphaStrikeData
 from NullgModels.Constants import *
 from NullgModels.PilotModels import PilotData
 from NullgModels.NullGBaseModels import NullGBaseModel
-from NullgModels.NullGEnums import UnitType
+from NullgModels.NullGEnums import UnitType, UnitSubtype
 from NullgModels.TotalWarModels import TotalWarDropshipData, TotalWarInfantryData, TotalWarAerospaceData, \
     TotalWarBattleMechData, TotalWarVehicleData, TotalWarDropshipExtendedData, TotalWarInfantryExtendedData, \
     TotalWarAerospaceExtendedData, TotalWarBattleMechExtendedData, TotalWarVehicleExtendedData
@@ -192,8 +192,8 @@ class UnitData(NullGBaseModel):
     availableEras: Optional[List[int]] = Field(description="Eras the unit is available in", default=None)
     alphaStrike: Optional[AlphaStrikeData] = Field(description="Alpha Strike Data", default=None)
     alphaStrikeResults: Optional[Dict[str, Any]] = Field(description="Alpha Strike Calculation Data", default=None)
-    unitTypeId: int = Field(description="Type of unit", default=None)
-    unitSubtypeId: int = Field(description="Subtype of unit", default=None)
+    unitTypeId: UnitType = Field(description="Type of unit", default=None)
+    unitSubtypeId: UnitSubtype = Field(description="Subtype of unit", default=None)
     expanded: bool = Field(
         description="Is the unit data expanded to include full equipment and Mul data",
         default=False,
