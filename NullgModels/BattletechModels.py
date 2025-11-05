@@ -211,9 +211,9 @@ class UnitData(NullGBaseModel):
     @classmethod
     def validate_totalwar_type(cls, v: Dict, info: ValidationInfo):
         if v is not None and isinstance(v, dict):
-            if FIELD_UNIT_TYPE_ID in info.data and isinstance(info.data[FIELD_UNIT_TYPE_ID], int):
+            if FIELD_UNIT_TYPE in info.data and isinstance(info.data[FIELD_UNIT_TYPE], int):
                 try:
-                    thisUnitType = UnitType(info.data[FIELD_UNIT_TYPE_ID])
+                    thisUnitType = UnitType(info.data[FIELD_UNIT_TYPE])
                 except ValueError:
                     raise ValueError('Invalid unit type')
 
@@ -254,9 +254,9 @@ class UnitDataExtended(UnitData):
     @classmethod
     def validate_totalwar_type(cls, v: Dict, info: ValidationInfo):
         if v is not None and isinstance(v, dict):
-            if FIELD_UNIT_TYPE_ID in info.data and isinstance(info.data[FIELD_UNIT_TYPE_ID], int):
+            if FIELD_UNIT_TYPE in info.data and isinstance(info.data[FIELD_UNIT_TYPE], int):
                 try:
-                    thisUnitType = UnitType(info.data[FIELD_UNIT_TYPE_ID])
+                    thisUnitType = UnitType(info.data[FIELD_UNIT_TYPE])
                 except ValueError:
                     raise ValueError('Invalid unit type')
 
