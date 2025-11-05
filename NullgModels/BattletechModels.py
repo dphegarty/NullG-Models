@@ -6,7 +6,7 @@ from NullgModels.AlphaStrikeModels import AlphaStrikeData
 from NullgModels.Constants import *
 from NullgModels.PilotModels import PilotData
 from NullgModels.NullGBaseModels import NullGBaseModel
-from NullgModels.NullGEnums import UnitType, UnitSubtype
+from NullgModels.NullGEnums import UnitType, UnitSubtype, RoleType, WeightClassType, RulesLevelType, UnitCategoryType
 from NullgModels.TotalWarModels import TotalWarDropshipData, TotalWarInfantryData, TotalWarAerospaceData, \
     TotalWarBattleMechData, TotalWarVehicleData, TotalWarDropshipExtendedData, TotalWarInfantryExtendedData, \
     TotalWarAerospaceExtendedData, TotalWarBattleMechExtendedData, TotalWarVehicleExtendedData
@@ -177,15 +177,15 @@ class UnitData(NullGBaseModel):
     pv: Optional[int] = Field(description="Alpha Strike points value", default=None)
     techbase: Optional[str] = Field(description="Unit overall technology base", default=None)
     mulId: Optional[int] = Field(description="The corresponding Master Unit List Id", default=None)
-    weightClassId: Optional[int] = Field(description="Weight Class Id", default=None)
-    roleId: Optional[int] = Field(description="Unit role Id", default=None)
-    rulesLevel: Optional[int] = Field(description="Rules Level the unit is part of", default=None)
+    weightClass: Optional[WeightClassType] = Field(description="Weight Class Id", default=None)
+    role: Optional[RoleType] = Field(description="Unit role Id", default=None)
+    rulesLevel: Optional[RulesLevelType] = Field(description="Rules Level the unit is part of", default=None)
     barcodes: Optional[List[str]] = Field(description="Barcodes of any boxsets the unit miniature is part of",
                                           default=None)
     fullName: Optional[str] = Field(description="Units full name", default=None)
     metadata: Optional[Dict[str, bool]] = Field(description="Metadata", default=None)
     notes: Optional[str] = Field(description="Any extra notes", default=None)
-    unitCategory: Optional[int] = Field(description="Unit category: Official, User Created..", default=None)
+    unitCategory: Optional[UnitCategoryType] = Field(description="Unit category: Official, User Created..", default=None)
     factions: Optional[List[int]] = Field(description="List of Faction Ids that the unit is available to", default=None)
     creationSource: Optional[str] = Field(description="How was the created", default=None)
     productionYear: Optional[int] = Field(description="The year the unit went into production", default=None)

@@ -137,7 +137,7 @@ class EquipmentType(IntEnum):
     weaponbay = 14
 
 
-class WeightClass(IntEnum):
+class WeightClassType(IntEnum):
     """Unit weight classifications by tonnage.
     
     Categorizes units into weight classes based on their mass/tonnage.
@@ -171,7 +171,7 @@ class WeightClass(IntEnum):
     superHeavy = 5
 
 
-class UnitCategory(IntEnum):
+class UnitCategoryType(IntEnum):
     """Source and validation status of unit data.
     
     Indicates the origin and validation status of a unit entry in the
@@ -185,12 +185,12 @@ class UnitCategory(IntEnum):
         
     Usage:
         Filter for official units only:
-        >>> {"unitCategory": UnitCategory.official}
+        >>> {"unitCategory": UnitCategoryType.official}
         
     Examples:
-        >>> UnitCategory.official
+        >>> UnitCategoryType.official
         0
-        >>> UnitCategory.userCreated.name
+        >>> UnitCategoryType.userCreated.name
         'userCreated'
     """
     official = 0
@@ -310,7 +310,7 @@ class InventoryStorageType(Enum):
     formationMember = 4
 
 
-class UnitExperienceLevels(IntEnum):
+class UnitExperienceLevelType(IntEnum):
     """Pilot/crew experience and skill levels.
     
     Defines experience levels for unit crews and pilots, affecting
@@ -329,13 +329,13 @@ class UnitExperienceLevels(IntEnum):
         
     Usage:
         Track unit crew quality:
-        >>> unit.experienceLevel = UnitExperienceLevels.veteran
-        >>> {"experience": {"$lte": UnitExperienceLevels.elite}}  # Elite or better
+        >>> unit.experienceLevel = UnitExperienceLevelType.veteran
+        >>> {"experience": {"$lte": UnitExperienceLevelType.elite}}  # Elite or better
         
     Examples:
-        >>> UnitExperienceLevels.elite
+        >>> UnitExperienceLevelType.elite
         2
-        >>> UnitExperienceLevels.green.name
+        >>> UnitExperienceLevelType.green.name
         'green'
     """
     legendary = 0
@@ -512,3 +512,21 @@ class TotalWarEquipmentItemType(str, Enum):
     equipment = "equipment"
     bay = "bay"
     weaponbay = "weaponbay"
+
+class RulesLevelType(IntEnum):
+    """
+    Describes the rule level
+    Attributes:
+        introductory: Introductory rule level (ID: 1).
+        standard: Standard rule level (ID: 2).
+        advanced: Advanced rule level (ID: 3).
+        experimental: Experimental rule level (ID: 4).
+
+    Examples:
+        >>> RulesLevelType.introductory
+        >>> RulesLevelType.standard
+    """
+    introductory = 1
+    standard = 2
+    advanced = 3
+    experimental = 4
