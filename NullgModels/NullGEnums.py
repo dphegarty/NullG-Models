@@ -279,6 +279,7 @@ class UnitSubtype(IntEnum):
     OmniMech = 11
     Spheroid = 12
     SupportVehicle = 13
+    OmniVehicle = 14
 
 
 class InventoryStorageType(Enum):
