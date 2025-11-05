@@ -192,8 +192,8 @@ class UnitData(NullGBaseModel):
     availableEras: Optional[List[int]] = Field(description="Eras the unit is available in", default=None)
     alphaStrike: Optional[AlphaStrikeData] = Field(description="Alpha Strike Data", default=None)
     alphaStrikeResults: Optional[Dict[str, Any]] = Field(description="Alpha Strike Calculation Data", default=None)
-    unitTypeId: UnitType = Field(description="Type of unit", default=None)
-    unitSubtypeId: UnitSubtype = Field(description="Subtype of unit", default=None)
+    unitType: UnitType = Field(description="Type of unit", default=None)
+    unitSubtype: UnitSubtype = Field(description="Subtype of unit", default=None)
     expanded: bool = Field(
         description="Is the unit data expanded to include full equipment and Mul data",
         default=False,
