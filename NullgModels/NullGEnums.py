@@ -530,3 +530,35 @@ class RulesLevelType(IntEnum):
     standard = 2
     advanced = 3
     experimental = 4
+
+
+class MotionType(str, Enum):
+    """
+    Describes the motion type of a unit
+    Attributes:
+
+    Examples:
+        >>> MotionType.Aerodyne
+        'Aerodyne'
+        >>> MotionType.VTOL
+        'VTOL'
+        >>> MotionType.Hover
+        'Hover'
+    """
+    Hover = "Hover"
+    Hydrofoil = "Hydrofoil"
+    Naval = "Naval"
+    Rail = "Rail"
+    Submarine = "Submarine"
+    Tracked = "Tracked"
+    VTOL = "VTOL"
+    Wheeled = "Wheeled"
+    WiGE = "WiGE"
+    Leg = "Leg"
+    UMU = "UMU"
+    Jump = "Jump"
+    Bimodal = "Bimodal"
+    Aerodyne = "Aerodyne"
+    Motorized = "Motorized"
+    SCUBA = "SCUBA"
+    Spheroid = "Spheroid"

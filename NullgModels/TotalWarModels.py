@@ -24,7 +24,7 @@ from pydantic import Field
 
 from NullgModels.EquipmentModels import EquipmentItem
 from NullgModels.NullGBaseModels import NullGBaseModel
-from NullgModels.NullGEnums import TurretType, JumpJetType, TotalWarEquipmentItemType
+from NullgModels.NullGEnums import TurretType, JumpJetType, TotalWarEquipmentItemType, MotionType
 
 
 class TotalWarBasicComponent(NullGBaseModel):
@@ -577,7 +577,7 @@ class TotalWarUnitDataBase(NullGBaseModel):
         default=None,
         examples=[4, 6, 9, 12]
     )
-    motionType: Optional[str] = Field(
+    motionType: Optional[MotionType] = Field(
         description="Movement type/locomotion method. "
                     "BattleMechs: Biped, Quad. Vehicles: Wheeled, Tracked, Hover, VTOL, "
                     "Naval (Displacement), Naval (Hydrofoil), WiGE. Aerospace: Aerodyne, Spheroid.",
