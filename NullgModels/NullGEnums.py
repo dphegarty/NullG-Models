@@ -412,17 +412,17 @@ class TurretType(IntEnum):
     Attributes:
         none: No turret configuration (ID: 0).
         single: Single turret (ID: 1).
-        duel: Dual turret (ID: 2).
+        dual: Dual turret (ID: 2).
 
     Examples:
         >>> TurretType.single
         1
-        >>> TurretType.duel.name
+        >>> TurretType.dual.name
         'duel'
     """
     none = 0
     single = 1
-    duel = 2
+    dual = 2
 
 class JumpJetType(IntEnum):
     """
