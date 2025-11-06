@@ -251,7 +251,14 @@ class AlphaStrikeSpecialDamageItem(NullGBaseModel):
     inTurret: Optional[bool] = Field(
         description="Whether this special is mounted in a turret. "
                    "Turret weapons can fire in any direction regardless of unit facing.",
-        default=None
+        default=None,
+        examples = [True, False]
+    )
+    isSSW: Optional[bool] = Field(
+        description="Whether this special is mounted in a Squad Support Weapon."
+                    "This is only for Battle Armor units.",
+        default=False,
+        examples=[True, False]
     )
 
 
