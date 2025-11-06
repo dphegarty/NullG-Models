@@ -24,7 +24,8 @@ from pydantic import Field
 
 from NullgModels.EquipmentModels import EquipmentItem
 from NullgModels.NullGBaseModels import NullGBaseModel
-from NullgModels.NullGEnums import TurretType, JumpJetType, TotalWarEquipmentItemType, MotionType
+from NullgModels.NullGEnums import TurretType, JumpJetType, TotalWarEquipmentItemType, MotionType, WeightClassType, \
+    RoleType
 
 
 class TotalWarBasicComponent(NullGBaseModel):
@@ -615,7 +616,7 @@ class TotalWarUnitDataBase(NullGBaseModel):
         default=None,
         examples=[0, 3, 5, 6, 8]
     )
-    weightClassId: Optional[int] = Field(
+    weightClass: Optional[WeightClassType] = Field(
         description="Weight class identifier (see WeightClass enum). "
                     "0=ultralight, 1=light, 2=medium, 3=heavy, 4=assault, 5=superheavy.",
         default=None,
@@ -650,7 +651,7 @@ class TotalWarUnitDataBase(NullGBaseModel):
         default=None,
         examples=["Basic", "Advanced"]
     )
-    roleId: Optional[int] = Field(
+    role: Optional[RoleType] = Field(
         description="Tactical role identifier (see MUL role list). "
                     "Common roles: Scout, Striker, Skirmisher, Brawler, Juggernaut, "
                     "Missile Boat, Sniper, Ambusher.",
