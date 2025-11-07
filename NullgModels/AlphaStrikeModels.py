@@ -389,7 +389,7 @@ class AlphaStrikeData(NullGBaseModel):
         default=None,
         examples=[4, 5, 28]
     )
-    aero: Optional[bool] = Field(
+    isAero: Optional[bool] = Field(
         description="Whether this unit uses aerospace movement and combat rules. "
                    "True for fighters, DropShips, and other spacecraft.",
         default=None
