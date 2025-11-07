@@ -485,7 +485,7 @@ class AlphaStrikeData(NullGBaseModel):
         default=None,
         examples=[0, 2, 3, 4, 6]
     )
-    armed: Optional[bool] = Field(
+    isArmed: Optional[bool] = Field(
         description="Whether the unit is considered armed/combat-capable. "
                    "False for unarmed support vehicles and transport units.",
         default=None
