@@ -16,6 +16,7 @@ https://bg.battletech.com/books/alpha-strike/
 from typing import Optional, List
 from pydantic import Field
 from NullgModels.NullGBaseModels import NullGBaseModel
+from NullgModels.NullGEnums import UnitType
 
 
 class AlphaStrikeArcFormattedSpecialItem(NullGBaseModel):
@@ -430,7 +431,7 @@ class AlphaStrikeData(NullGBaseModel):
                    "LAMs can transform between mech, fighter, and hybrid modes.",
         default=None
     )
-    baseUnitTypeId: Optional[int] = Field(
+    baseUnitType: Optional[UnitType] = Field(
         description="Base unit type from Total Warfare system (see UnitType enum). "
                    "Maps to: 0=aerospace, 1=dropship, 2=mech, 3=infantry, 4=vehicle.",
         default=None,
