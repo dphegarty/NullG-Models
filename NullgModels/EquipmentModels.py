@@ -13,6 +13,8 @@ class EquipmentAlphaStrike(NullGBaseModel):
     long: Optional[List[float]] = Field(description="Long range damage values", default=[0.0,0.0,0.0])
     medium: Optional[List[float]] = Field(description="Medium range damage values", default=[0.0,0.0,0.0])
     short: Optional[List[float]] = Field(description="Short range damage values", default=[0.0,0.0,0.0])
+    artillery: Optional[List[float]] = Field(description="Artillery damage values", default=[0.0,0.0,0.0])
+    radius: Optional[int] = Field(description="Radius of artillery damage values", default=0)
     tc: Optional[bool] = Field(description="Can this use a Targeting Computer", default=False)
     specials: Optional[List[str]] = Field(
         description="List of specials abilities conferred by this equipment",
