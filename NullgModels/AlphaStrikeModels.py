@@ -220,39 +220,39 @@ class AlphaStrikeSpecialDamageItem(NullGBaseModel):
     name: Optional[str] = Field(
         description="Special ability code name (AC=Autocannon, LRM=Long Range Missiles, "
                    "ARTS=Artillery, AMS=Anti-Missile System, etc.)",
-        default=None,
+        default="",
         examples=["AC", "LRM", "ARTS", "AMS", "ATM", "SRM"]
     )
     count: Optional[int] = Field(
         description="Number of instances of this special ability on the unit. "
                    "Used when the same special appears multiple times.",
-        default=None,
+        default=0,
         examples=[1, 2, 3]
     )
     short: Optional[float] = Field(
         description="Damage value at short range (0-6 inches) for this special ability",
-        default=None,
+        default=0.0,
         examples=[2.0, 1.5, 0.0]
     )
     medium: Optional[float] = Field(
         description="Damage value at medium range (7-12 inches) for this special ability",
-        default=None,
+        default=0.0,
         examples=[2.0, 1.0, 0.0]
     )
     long: Optional[float] = Field(
         description="Damage value at long range (13-24 inches) for this special ability",
-        default=None,
+        default=0.0,
         examples=[2.0, 0.5, 0.0]
     )
     extreme: Optional[float] = Field(
         description="Damage value at extreme range (25-48 inches, aerospace only) for this special ability",
-        default=None,
+        default=0.0,
         examples=[1.0, 0.0]
     )
     inTurret: Optional[bool] = Field(
         description="Whether this special is mounted in a turret. "
                    "Turret weapons can fire in any direction regardless of unit facing.",
-        default=None,
+        default=False,
         examples = [True, False]
     )
     isSSW: Optional[bool] = Field(
