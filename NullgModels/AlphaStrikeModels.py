@@ -16,7 +16,7 @@ https://bg.battletech.com/books/alpha-strike/
 from typing import Optional, List
 from pydantic import Field
 from NullgModels.NullGBaseModels import NullGBaseModel
-from NullgModels.NullGEnums import UnitType
+from NullgModels.NullGEnums import UnitType, RoleType
 
 
 class AlphaStrikeArcFormattedSpecialItem(NullGBaseModel):
@@ -57,7 +57,7 @@ class AlphaStrikeArcFormattedSpecialItem(NullGBaseModel):
     )
 
 
-class AlphaStrikeArcDamageRecord(NullGBaseModel):
+class AlphaStrikeDamageRecord(NullGBaseModel):
     """Damage values at different range bands.
     
     Alpha Strike uses four range bands: Short, Medium, Long, and Extreme.
@@ -70,7 +70,7 @@ class AlphaStrikeArcDamageRecord(NullGBaseModel):
         extreme: Damage at extreme range (25-48 inches, aerospace only).
         
     Examples:
-        >>> damage = AlphaStrikeArcDamageRecord(
+        >>> damage = AlphaStrikeDamageRecord(
         ...     short=4.0,
         ...     medium=4.0,
         ...     long=2.0,
@@ -122,36 +122,36 @@ class AlphaStrikeArcDamageMapItem(NullGBaseModel):
         
     Examples:
         >>> arc_damage = AlphaStrikeArcDamageMapItem(
-        ...     STD=AlphaStrikeArcDamageRecord(short=4.0, medium=4.0, long=2.0),
-        ...     PNT=AlphaStrikeArcDamageRecord(short=1.0, medium=1.0, long=1.0)
+        ...     STD=AlphaStrikeDamageRecord(short=4.0, medium=4.0, long=2.0),
+        ...     PNT=AlphaStrikeDamageRecord(short=1.0, medium=1.0, long=1.0)
         ... )
     """
-    STD: Optional[AlphaStrikeArcDamageRecord] = Field(
+    STD: Optional[AlphaStrikeDamageRecord] = Field(
         description="Standard weapon damage map for this arc. "
                    "Includes conventional weapons like autocannons, lasers, and PPCs.",
         default=None
     )
-    SCAP: Optional[AlphaStrikeArcDamageRecord] = Field(
+    SCAP: Optional[AlphaStrikeDamageRecord] = Field(
         description="Sub-capital weapon damage map for this arc. "
                    "Light capital-scale weapons for engaging smaller capital ships.",
         default=None
     )
-    MSL: Optional[AlphaStrikeArcDamageRecord] = Field(
+    MSL: Optional[AlphaStrikeDamageRecord] = Field(
         description="Capital missile damage map for this arc. "
                    "Includes Barracuda, White Shark, and Killer Whale missiles.",
         default=None
     )
-    FLAK: Optional[AlphaStrikeArcDamageRecord] = Field(
+    FLAK: Optional[AlphaStrikeDamageRecord] = Field(
         description="Anti-aircraft flak damage map for this arc. "
                    "Used to engage aerospace fighters and other flying units.",
         default=None
     )
-    PNT: Optional[AlphaStrikeArcDamageRecord] = Field(
+    PNT: Optional[AlphaStrikeDamageRecord] = Field(
         description="Point defense damage map for this arc. "
                    "Used to intercept incoming missiles and aerospace fighters.",
         default=None
     )
-    CAP: Optional[AlphaStrikeArcDamageRecord] = Field(
+    CAP: Optional[AlphaStrikeDamageRecord] = Field(
         description="Capital weapon damage map for this arc. "
                    "Heavy ship-to-ship weapons like Naval Autocannons and Gauss.",
         default=None
@@ -172,8 +172,8 @@ class AlphaStrikeArcDamageMap(NullGBaseModel):
         >>> front_arc = AlphaStrikeArcDamageMap(
         ...     name="Front",
         ...     value=AlphaStrikeArcDamageMapItem(
-        ...         STD=AlphaStrikeArcDamageRecord(short=6.0, medium=6.0, long=4.0),
-        ...         PNT=AlphaStrikeArcDamageRecord(short=2.0, medium=2.0, long=2.0)
+        ...         STD=AlphaStrikeDamageRecord(short=6.0, medium=6.0, long=4.0),
+        ...         PNT=AlphaStrikeDamageRecord(short=2.0, medium=2.0, long=2.0)
         ...     )
         ... )
     """
@@ -189,7 +189,7 @@ class AlphaStrikeArcDamageMap(NullGBaseModel):
     )
 
 
-class AlphaStrikeSpecialDamageItem(NullGBaseModel):
+class AlphaStrikeSpecialDamageItem(AlphaStrikeDamageRecord):
     """Special ability with associated damage values.
     
     Some Alpha Strike special abilities deal damage (like Artillery, Air-to-Ground,
@@ -229,26 +229,6 @@ class AlphaStrikeSpecialDamageItem(NullGBaseModel):
         default=0,
         examples=[1, 2, 3]
     )
-    short: Optional[float] = Field(
-        description="Damage value at short range (0-6 inches) for this special ability",
-        default=0.0,
-        examples=[2.0, 1.5, 0.0]
-    )
-    medium: Optional[float] = Field(
-        description="Damage value at medium range (7-12 inches) for this special ability",
-        default=0.0,
-        examples=[2.0, 1.0, 0.0]
-    )
-    long: Optional[float] = Field(
-        description="Damage value at long range (13-24 inches) for this special ability",
-        default=0.0,
-        examples=[2.0, 0.5, 0.0]
-    )
-    extreme: Optional[float] = Field(
-        description="Damage value at extreme range (25-48 inches, aerospace only) for this special ability",
-        default=0.0,
-        examples=[1.0, 0.0]
-    )
     inTurret: Optional[bool] = Field(
         description="Whether this special is mounted in a turret. "
                    "Turret weapons can fire in any direction regardless of unit facing.",
@@ -283,14 +263,14 @@ class AlphaStrikeData(NullGBaseModel):
         specialsDamage: List of special abilities that deal damage with their values.
         version: Version number of the Alpha Strike data schema.
         trooperCount: Number of individual soldiers (for infantry/battle armor units).
-        aero: Whether this is an aerospace unit (uses aerospace rules).
+        isAero: Whether this is an aerospace unit (uses aerospace rules).
         skill: Pilot/crew skill rating (typically 2-7, lower is better).
         useOfficialPoints: Whether to use official PV or calculated PV.
         calculatedPV: Calculated point value based on unit stats.
         officialPV: Official point value from Master Unit List (may differ from calculated).
         armorThreshold: Armor threshold for aerospace units (damage reduction).
         isLAM: Whether this is a Land-Air Mech (can transform between modes).
-        baseUnitTypeId: Base unit type from Total Warfare (see UnitType enum).
+        baseUnitType: Base unit type from Total Warfare (see UnitType enum).
         unitType: Alpha Strike unit type classification string.
         size: Unit size category (affects terrain interactions and targeting).
         walk: Ground movement rate in inches per turn.
@@ -298,13 +278,10 @@ class AlphaStrikeData(NullGBaseModel):
         movementMode: Primary movement type (e.g., "Ground", "VTOL", "Hover", "Wheeled").
         armor: Total armor points (damage capacity before destruction).
         structure: Internal structure points (additional damage capacity for some units).
-        armed: Whether the unit has weapons (false for unarmed support units).
-        damageShort: Total damage at short range (0-6 inches).
-        damageMedium: Total damage at medium range (7-12 inches).
-        damageLong: Total damage at long range (13-24 inches).
-        damageExtreme: Total damage at extreme range (25-48 inches, aerospace only).
+        isArmed: Whether the unit has weapons (false for unarmed support units).
+        damage: Daamge values for the unit at ranges.
         overheat: Overheat value (heat threshold for energy weapons).
-        roleId: Tactical role identifier (see Master Unit List roles).
+        role: Tactical role identifier (see Master Unit List roles).
         tmm: Target Movement Modifier (defensive bonus from speed).
         arcversion: Version number for arc-based damage system (large units).
         skillDifference: Difference from standard skill rating of 4.
@@ -354,7 +331,7 @@ class AlphaStrikeData(NullGBaseModel):
         description="List of formatted special ability strings ready for display on unit cards. "
                    "Format: 'ABILITY#/#/#' where numbers are damage at S/M/L ranges. "
                    "Examples: 'AC2/2/2', 'LRM1/1/1', 'CASE', 'AMS'.",
-        default=None,
+        default_factory=list,
         examples=[
             ["AC2/2/2", "LRM1/1/1", "CASE"],
             ["AMS", "ECM", "PRB"],
@@ -365,7 +342,7 @@ class AlphaStrikeData(NullGBaseModel):
         description="List of unformatted special ability codes. "
                    "Raw ability names without damage values or formatting. "
                    "See Alpha Strike rules for complete special abilities list.",
-        default=None,
+        default_factory=list,
         examples=[
             ["AC", "LRM", "CASE"],
             ["AMS", "ECM", "PRB"],
@@ -375,61 +352,64 @@ class AlphaStrikeData(NullGBaseModel):
     specialsDamage: Optional[List[AlphaStrikeSpecialDamageItem]] = Field(
         description="List of special abilities that deal damage with their specific damage values. "
                    "Used for abilities that have variable damage not included in main damage values.",
-        default=None
+        default_factory=list
     )
     version: Optional[float] = Field(
         description="Schema version number for this Alpha Strike data structure. "
                    "Used to track data model changes over time.",
-        default=None,
+        default=0.0,
         examples=[1.0, 2.0, 2.5]
     )
     trooperCount: Optional[int] = Field(
         description="Number of individual soldiers or troopers in this unit. "
                    "Used for infantry squads and battle armor points. "
                    "Typically 1-5 for battle armor, higher for conventional infantry.",
-        default=None,
+        default=1,
         examples=[4, 5, 28]
     )
     isAero: Optional[bool] = Field(
         description="Whether this unit uses aerospace movement and combat rules. "
                    "True for fighters, DropShips, and other spacecraft.",
-        default=None
+        default=False,
+        examples=[True, False]
     )
     skill: Optional[int] = Field(
         description="Pilot/crew skill rating. Standard skill is 4. "
                    "Lower numbers are better (more skilled). Range: 2-7. "
                    "Affects to-hit rolls and point value.",
-        default=None,
+        default=0,
         examples=[2, 3, 4, 5, 6]
     )
     useOfficialPoints: Optional[bool] = Field(
         description="Whether to use official PV from Master Unit List or calculated PV. "
                    "Official values are sometimes outdated or incorrect.",
-        default=None
+        default=False,
+        examples=[True, False]
     )
     calculatedPV: Optional[int] = Field(
         description="Point Value calculated from unit stats using Alpha Strike formula. "
                    "Used for force balancing and scenario design.",
-        default=None,
+        default=0,
         examples=[25, 35, 42, 58]
     )
     officialPV: Optional[int] = Field(
         description="Official Point Value as published in Master Unit List. "
                    "Note: These values are not always accurate or up-to-date. "
                    "calculatedPV is often more reliable.",
-        default=None,
+        default=0,
         examples=[24, 36, 41, 57]
     )
     armorThreshold: Optional[int] = Field(
         description="Armor Threshold for aerospace units. "
                    "Damage below this value is ignored. Only on large aerospace units.",
-        default=None,
+        default=0,
         examples=[2, 4, 6]
     )
     isLAM: Optional[bool] = Field(
         description="Whether this is a Land-Air Mech (LAM). "
                    "LAMs can transform between mech, fighter, and hybrid modes.",
-        default=None
+        default=False,
+        examples=[True, False]
     )
     baseUnitType: Optional[UnitType] = Field(
         description="Base unit type from Total Warfare system (see UnitType enum). "
@@ -446,141 +426,127 @@ class AlphaStrikeData(NullGBaseModel):
     )
     size: Optional[int] = Field(
         description="Unit size category. Affects terrain interactions and to-hit modifiers. "
-                   "1=small (infantry), 2=medium (light vehicles), 3=large (heavy mechs), "
-                   "4=very large (DropShips).",
-        default=None,
+                   "1=small (infantry, light mech), 2=medium (medium vehicles), 3=large (heavy mechs), "
+                   "4=very large (DropShips, assault mech).",
+        default=0,
         examples=[1, 2, 3, 4]
     )
     walk: Optional[int] = Field(
         description="Ground movement rate in inches per turn. "
                    "Standard movement without running or jumping. "
                    "0 means immobile or aerospace-only movement.",
-        default=None,
+        default=0,
         examples=[0, 4, 6, 8, 10, 12]
     )
     jump: Optional[int] = Field(
         description="Jump movement rate in inches per turn. "
                    "Movement using jump jets, ignoring terrain. "
                    "0 or None means no jump capability.",
-        default=None,
+        default=0,
         examples=[0, 4, 6, 8]
     )
     movementMode: Optional[str] = Field(
         description="Primary movement mode/type. "
                    "Ground=standard ground movement, VTOL=vertical takeoff/landing, "
                    "Hover=hovering over terrain, Wheeled=wheeled vehicle, etc.",
-        default=None,
-        examples=["Ground", "VTOL", "Hover", "Wheeled", "Tracked", "Naval"]
+        default="",
+        examples=["", "v", "h", "Ww", "t", "j"]
     )
     armor: Optional[int] = Field(
         description="Total armor points. This is the unit's damage capacity. "
                    "When reduced to 0, the unit is destroyed. "
                    "Can be reduced by enemy fire during combat.",
-        default=None,
+        default=0,
         examples=[3, 6, 8, 12, 20]
     )
     structure: Optional[int] = Field(
         description="Internal structure points. "
                    "Additional damage capacity after armor is depleted. "
                    "Not all units have structure (mainly mechs and vehicles).",
-        default=None,
+        default=0,
         examples=[0, 2, 3, 4, 6]
     )
     isArmed: Optional[bool] = Field(
         description="Whether the unit is considered armed/combat-capable. "
                    "False for unarmed support vehicles and transport units.",
-        default=None
+        default=False,
+        examples=[True, False]
     )
-    damageShort: Optional[float] = Field(
-        description="Total damage output at short range (0-6 inches). "
-                   "Consolidated value of all weapons effective at this range.",
-        default=None,
-        examples=[0.0, 2.0, 3.5, 4.0, 6.0]
-    )
-    damageMedium: Optional[float] = Field(
-        description="Total damage output at medium range (7-12 inches). "
-                   "Consolidated value of all weapons effective at this range.",
-        default=None,
-        examples=[0.0, 2.0, 3.0, 4.0, 5.0]
-    )
-    damageLong: Optional[float] = Field(
-        description="Total damage output at long range (13-24 inches). "
-                   "Consolidated value of all weapons effective at this range.",
-        default=None,
-        examples=[0.0, 1.0, 2.0, 3.0, 4.0]
-    )
-    damageExtreme: Optional[float] = Field(
-        description="Total damage output at extreme range (25-48 inches). "
-                   "Only used by aerospace units. Ground units do not have extreme range damage.",
-        default=None,
-        examples=[0.0, 1.0, 2.0]
+    damage: Optional[AlphaStrikeDamageRecord] = Field(
+        description="Complete damage record for this unit. "
+                   "Includes damage at short, medium, and long ranges. "
+                   "Can be used to calculate point value.",
+        default_factory=AlphaStrikeDamageRecord
     )
     overheat: Optional[int] = Field(
         description="Overheat value. Number of heat points generated by firing all weapons. "
                    "If unit fires, it takes this much damage to itself. "
                    "0 or None means no overheat (no energy weapons or has sufficient heat sinks).",
-        default=None,
+        default=0,
         examples=[0, 1, 2, 3]
     )
-    roleId: Optional[int] = Field(
+    role: Optional[RoleType] = Field(
         description="Tactical role identifier from Master Unit List. "
                    "Defines the unit's intended battlefield function. "
                    "Common roles: Scout, Striker, Skirmisher, Brawler, Juggernaut, Missile Boat, Sniper.",
-        default=None,
+        default=0,
         examples=[0, 1, 2, 3, 4, 5, 6]
     )
     tmm: Optional[int] = Field(
         description="Target Movement Modifier. Defensive bonus from unit speed. "
                    "Added to opponent's to-hit roll. Higher is better for defense. "
                    "Based on movement rate: 0=immobile, 1-4+ based on speed.",
-        default=None,
+        default=0,
         examples=[0, 1, 2, 3, 4]
     )
     arcversion: Optional[float] = Field(
         description="Version number for firing arc damage system. "
                    "Used by large units with directional firing arcs (DropShips, WarShips).",
-        default=None,
+        default=0.0,
         examples=[1.0, 2.0]
     )
     skillDifference: Optional[int] = Field(
         description="Difference between unit's skill rating and standard skill (4). "
                    "Positive means worse than standard, negative means better. "
                    "Used in point value calculations.",
-        default=None,
+        default=0,
         examples=[-2, -1, 0, 1, 2]
     )
     skillPoints: Optional[int] = Field(
         description="Point value adjustment for non-standard pilot skill. "
                    "Better pilots cost more points, worse pilots reduce cost. "
                    "Applied to calculatedPV to get final point value.",
-        default=None,
+        default=0,
         examples=[-10, -5, 0, 5, 10]
     )
     isLargeUnit: Optional[bool] = Field(
         description="Whether this is a large unit with firing arcs. "
                    "True for DropShips, WarShips, and some large support vehicles. "
                    "Large units use arcDamageMaps instead of simple damage values.",
-        default=None
+        default=False,
+        examples=[True, False]
     )
     arcFormatedSpecials: Optional[List[AlphaStrikeArcFormattedSpecialItem]] = Field(
         description="Special abilities organized by firing arc for large units. "
                    "Each arc (Front, Left, Right, Rear, etc.) has its own list of specials. "
                    "Only used when isLargeUnit is True.",
-        default=None
+        default_factory=list
     )
     arcDamageMaps: Optional[List[AlphaStrikeArcDamageMap]] = Field(
         description="Damage values organized by firing arc for large units. "
                    "Each arc has separate damage values for different weapon types. "
                    "Only used when isLargeUnit is True.",
-        default=None
+        default_factory=list
     )
     hasArtillerySystem: Optional[bool] = Field(
         description="Whether the unit has artillery capability (ARTS special ability). "
                    "Artillery can perform indirect fire attacks and barrage attacks.",
-        default=False
+        default=False,
+        examples=[True, False]
     )
     hasC3System: Optional[bool] = Field(
         description="Whether the unit has C3 computer networking (C3 family of specials). "
                    "C3 allows sharing targeting data between linked units for accuracy bonuses.",
-        default=False
+        default=False,
+        examples=[True, False]
     )
