@@ -81,22 +81,22 @@ class AlphaStrikeDamageRecord(NullGBaseModel):
     """
     short: Optional[float] = Field(
         description="Damage value at short range (0-6 inches in Alpha Strike)",
-        default=None,
+        default=0.0,
         examples=[4.0, 2.5, 0.0]
     )
     medium: Optional[float] = Field(
         description="Damage value at medium range (7-12 inches in Alpha Strike)",
-        default=None,
+        default=0.0,
         examples=[4.0, 2.0, 0.0]
     )
     long: Optional[float] = Field(
         description="Damage value at long range (13-24 inches in Alpha Strike)",
-        default=None,
+        default=0.0,
         examples=[2.0, 1.0, 0.0]
     )
     extreme: Optional[float] = Field(
         description="Damage value at extreme range (25-48 inches, aerospace units only)",
-        default=None,
+        default=0.0,
         examples=[1.0, 0.5, 0.0]
     )
 
