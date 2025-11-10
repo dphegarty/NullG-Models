@@ -377,7 +377,7 @@ class AlphaStrikeData(NullGBaseModel):
         description="Pilot/crew skill rating. Standard skill is 4. "
                    "Lower numbers are better (more skilled). Range: 2-7. "
                    "Affects to-hit rolls and point value.",
-        default=0,
+        default=4,
         examples=[2, 3, 4, 5, 6]
     )
     useOfficialPoints: Optional[bool] = Field(
