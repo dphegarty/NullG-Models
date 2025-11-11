@@ -3,7 +3,7 @@ from typing import Optional, List, Union, Dict
 
 from pydantic import Field, field_validator, ValidationInfo, BaseModel
 
-from NullgModels.Constants import FIELD_EQUIPMENT_TYPE_ID
+from NullgModels.Constants import FIELD_EQUIPMENT_TYPE
 from NullgModels.NullGBaseModels import NullGBaseModel
 from NullgModels.NullGEnums import EquipmentType, TechbaseType
 
@@ -272,9 +272,9 @@ class EquipmentItem(NullGBaseModel):
     @classmethod
     def validate_item_type(cls, v: Dict, info: ValidationInfo):
         if v is not None and isinstance(v, dict):
-            if FIELD_EQUIPMENT_TYPE_ID in info.data and isinstance(info.data[FIELD_EQUIPMENT_TYPE_ID], int):
+            if FIELD_EQUIPMENT_TYPE in info.data and isinstance(info.data[FIELD_EQUIPMENT_TYPE], int):
                 try:
-                    thisEquipmentType = EquipmentType(info.data[FIELD_EQUIPMENT_TYPE_ID])
+                    thisEquipmentType = EquipmentType(info.data[FIELD_EQUIPMENT_TYPE])
                 except ValueError as e:
                     raise e
 
