@@ -5,7 +5,7 @@ from pydantic import Field, field_validator, ValidationInfo, BaseModel
 
 from NullgModels.Constants import FIELD_EQUIPMENT_TYPE_ID
 from NullgModels.NullGBaseModels import NullGBaseModel
-from NullgModels.NullGEnums import EquipmentType
+from NullgModels.NullGEnums import EquipmentType, TechbaseType
 
 
 class EquipmentAlphaStrike(NullGBaseModel):
@@ -111,7 +111,6 @@ class WeaponClassification(BaseModel):
     isSubCapital: bool = Field(description="Is this Sub-capital", default=False, examples=[True, False])
     isSwitchable: bool = Field(description="", default=False, examples=[True, False])
     useTargetingComputer: bool = Field(description="Can this use a targeting computer", default=False, examples=[True, False])
-
 
 class EquipmentUnitTypes(NullGBaseModel):
     battlearmor: Optional[bool] = Field(default=False, description="Can be used by Battle Armor")
@@ -256,12 +255,10 @@ class AmmoItem(BaseEquipmentItem):
 
 class EquipmentItem(NullGBaseModel):
     id: Optional[str] = Field(description="", default=None)
-    equipmentType: Optional[str] = Field(description="", default=None)
-    equipmentTypeId: Optional[int] = Field(description="", default=None)
+    equipmentType: Optional[EquipmentType] = Field(description="", default=None)
     name: Optional[str] = Field(description="", default=None)
     techRating: Optional[str] = Field(description="", default=None)
-    techbase: Optional[str] = Field(description="", default=None)
-    techbaseId: Optional[int] = Field(description="", default=None)
+    techbase: Optional[TechbaseType] = Field(description="", default=None)
     type: Optional[EquipmentTypeData] = Field(description="", default=None)
     unitTypes: Optional[EquipmentUnitTypes] = Field(description="", default=None)
     version: Optional[float] = Field(description="", default=None)
