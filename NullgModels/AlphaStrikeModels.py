@@ -281,7 +281,6 @@ class AlphaStrikeData(NullGBaseModel):
         isArmed: Whether the unit has weapons (false for unarmed support units).
         damage: Daamge values for the unit at ranges.
         overheat: Overheat value (heat threshold for energy weapons).
-        role: Tactical role identifier (see Master Unit List roles).
         tmm: Target Movement Modifier (defensive bonus from speed).
         arcversion: Version number for arc-based damage system (large units).
         skillDifference: Difference from standard skill rating of 4.
@@ -484,13 +483,6 @@ class AlphaStrikeData(NullGBaseModel):
                    "0 or None means no overheat (no energy weapons or has sufficient heat sinks).",
         default=0,
         examples=[0, 1, 2, 3]
-    )
-    role: Optional[RoleType] = Field(
-        description="Tactical role identifier from Master Unit List. "
-                   "Defines the unit's intended battlefield function. "
-                   "Common roles: Scout, Striker, Skirmisher, Brawler, Juggernaut, Missile Boat, Sniper.",
-        default=0,
-        examples=[0, 1, 2, 3, 4, 5, 6]
     )
     tmm: Optional[int] = Field(
         description="Target Movement Modifier. Defensive bonus from unit speed. "

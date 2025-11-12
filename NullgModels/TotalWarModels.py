@@ -496,13 +496,9 @@ class TotalWarUnitDataBase(NullGBaseModel):
         walkMp: Walking movement points.
         trooperCount: Number of troopers (infantry/BA only).
         jumpMp: Jump movement points.
-        weightClassId: Weight class category.
         armorFactor: Actual armor tonnage.
         armorFactorMax: Maximum possible armor.
         fireControl: Fire control system rating.
-        roleId: Tactical role identifier.
-        unitTypeId: Primary unit type.
-        unitSubtypeId: Specific unit subtype.
     """
     armor: Optional[TotalWarArmorComponent] = Field(
         description="An object that decodes the armor component of the unit.",
@@ -616,12 +612,6 @@ class TotalWarUnitDataBase(NullGBaseModel):
         default=None,
         examples=[0, 3, 5, 6, 8]
     )
-    weightClass: Optional[WeightClassType] = Field(
-        description="Weight class identifier (see WeightClass enum). "
-                    "0=ultralight, 1=light, 2=medium, 3=heavy, 4=assault, 5=superheavy.",
-        default=None,
-        examples=[0, 1, 2, 3, 4]
-    )
     armorFactor: Optional[int] = Field(
         description="Actual armor tonnage on the unit. Armor weight in tons or points. "
                     "Must not exceed armorFactorMax.",
@@ -650,13 +640,6 @@ class TotalWarUnitDataBase(NullGBaseModel):
                     "Affects weapon accuracy and targeting.",
         default=None,
         examples=["Basic", "Advanced"]
-    )
-    role: Optional[RoleType] = Field(
-        description="Tactical role identifier (see MUL role list). "
-                    "Common roles: Scout, Striker, Skirmisher, Brawler, Juggernaut, "
-                    "Missile Boat, Sniper, Ambusher.",
-        default=None,
-        examples=[0, 1, 2, 3, 4, 5, 6, 7]
     )
 
 
