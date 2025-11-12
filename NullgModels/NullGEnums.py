@@ -466,6 +466,7 @@ class RoleType(IntEnum):
         sniper: Sniper role (ID: 11).
         striker: Striker role (ID: 12).
         transport: Transport role (ID: 13).
+        undefined: Undefined role (ID: 255).
 
         Examples:
             >>> RoleType.ambusher
@@ -487,6 +488,7 @@ class RoleType(IntEnum):
     sniper = 11
     striker = 12
     transport = 13
+    undefined = 255
 
 class TotalWarEquipmentItemType(str, Enum):
     """

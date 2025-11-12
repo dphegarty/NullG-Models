@@ -7,6 +7,19 @@ from NullgModels.Constants import FIELD_EQUIPMENT_TYPE
 from NullgModels.NullGBaseModels import NullGBaseModel
 from NullgModels.NullGEnums import EquipmentType, TechbaseType
 
+class EquipmentWeaponDamage(NullGBaseModel):
+    short: Optional[float] = Field(description="Short range damage value", default=0, examples=[10, 5, 0])
+    medium: Optional[float] = Field(description="Medium range damage value", default=0, examples=[25, 10, 0])
+    long: Optional[float] = Field(description="Long range damage value", default=0, examples=[5, 15, 0])
+    infantry: Optional[float] = Field(description="Infantry damage value", default=0, examples=[0.71, 0.55, 0.16])
+    infantryBurst: Optional[float] = Field(description="Infantry burst damage value", default=0, examples=[0.71, 0.55, 0.16])
+
+class EquipmentWeaponRanges(NullGBaseModel):
+    minimum: Optional[int] = Field(description="Minimum range value", default=0, examples=[1, 3, 5])
+    short: Optional[int] = Field(description="Short range value", default=0, examples=[10, 5, 0])
+    medium: Optional[int] = Field(description="Medium range value", default=0, examples=[25, 10, 0])
+    long: Optional[int] = Field(description="Long range value", default=0, examples=[5, 15, 0])
+    infantry: Optional[int] = Field(description="Infantry range value", default=0, examples=[1, 3, 4])
 
 class EquipmentAlphaStrike(NullGBaseModel):
     extreme: Optional[List[float]] = Field(description="Extreme range damage values", default=[0.0,0.0,0.0])
@@ -143,17 +156,13 @@ class WeaponItem(BaseEquipmentItem):
     clusterSize: Optional[int] = Field(description="", default=None)
     bayType: Optional[str] = Field(description="", default=None)
     crew: Optional[int] = Field(description="", default=None)
-    damage: Optional[dict] = Field(description="", default=None)
-    explosive: Optional[bool] = Field(description="", default=None)
+    damage: Optional[EquipmentWeaponDamage] = Field(description="", default=None)
+    ranges: Optional[EquipmentWeaponRanges] = Field(description="", default=None)
     extAV: Optional[float] = Field(description="", default=None)
     heat: Optional[int] = Field(description="", default=None)
     longAV: Optional[float] = Field(description="", default=None)
-    longRange: Optional[int] = Field(description="", default=None)
     medAV: Optional[float] = Field(description="", default=None)
-    mediumRange: Optional[int] = Field(description="", default=None)
-    minimumRange: Optional[int] = Field(description="", default=None)
     shortAV: Optional[float] = Field(description="", default=None)
-    shortRange: Optional[int] = Field(description="", default=None)
     capacitorBv: Optional[int] = Field(
         description="Unique to Inner Sphere PPCs. This is the additional BV cost for"
                     "attaching a capacitor to the PPC.",
