@@ -655,29 +655,17 @@ class TotalWarBattleMechData(TotalWarUnitDataBase):
     engine rating, heat sinks, gyro, cockpit, myomer, and critical slots.
 
     Attributes:
-        armorTechbase: Technology base for armor type.
         cockpit: Cockpit type (Standard, Small, Command, etc.).
         constructionInvalid: List of construction rule violations.
         constructionValidated: Whether construction has been validated.
-        criticalFreeHeatSinks: Heat sinks included free with engine.
         engine: Full engine description string.
-        engineRating: Engine power rating number.
-        engineTechbase: Technology base for engine.
-        engineType: Engine type (Fusion, XL, Light, etc.).
         extraOptions: Additional construction options flags.
         gyro: Gyroscope type (Standard, XL, Compact, Heavy-Duty).
         heatSinks: Total number of heat sinks.
-        heatSinksTechbase: Technology base for heat sinks.
-        heatSinksType: Heat sink type (Single, Double, Laser, Compact).
         myomer: Myomer/muscle type (Standard, TSM, MASC, etc.).
-        myomerTechbase: Technology base for myomer.
         structure: Internal structure type.
-        structureTechbase: Technology base for structure.
-        weapons: Total count of weapons.
-        heatSinksEngineBase: Heat sinks integrated in engine.
-        heatSinksOmniBase: Heat sinks in fixed pods (Omnis only).
+        weapons: Total count of weapons..
         criticalLocations: Critical slot allocation data.
-        barRating: Barrier Armor Rating (damage reduction).
         productionEra: Era when variant was introduced.
         jumpjetType: Type of jump jets (Standard, Improved, etc.).
 
@@ -790,20 +778,12 @@ class TotalWarAerospaceData(TotalWarUnitDataBase):
         constructionInvalid: Construction validation errors.
         constructionValidated: Validation status.
         extraOptions: Additional options dictionary.
-        engineRating: Engine thrust rating.
-        engineTechbase: Engine technology base.
-        engineType: Engine type.
         fuel: Fuel capacity in points.
         transportSpace: Cargo/transport capacity.
         heatSinks: Total heat sinks.
-        heatSinksTechbase: Heat sink tech base.
-        heatSinksType: Heat sink type code.
         structure: Structure type.
-        structureTechbase: Structure tech base.
         safeThrust: Safe thrust rating (movement).
         weapons: Weapon count.
-        heatSinksOmniBase: Omni heat sinks (if applicable).
-        barRating: Barrier armor rating.
         productionEra: Production era ID.
     """
     cockpit: Optional[TotalWarCockpitComponent] = Field(
@@ -870,8 +850,6 @@ class TotalWarInfantryData(TotalWarUnitDataBase):
         constructionInvalid: Construction validation errors.
         constructionValidated: Validation status.
         extraOptions: Additional options.
-        armorTechbase: Armor technology base.
-        structureTechbase: Structure tech base.
         structure: Structure type.
         trooperMass: Mass per individual trooper.
         productionEra: Production era ID.
@@ -935,23 +913,13 @@ class TotalWarVehicleData(TotalWarUnitDataBase):
     Attributes:
         constructionInvalid: Construction validation errors.
         constructionValidated: Validation status.
-        engineRating: Engine power rating.
-        engineTechbase: Engine technology base.
-        engineType: Engine type.
         extraOptions: Additional options.
         turretType: Turret configuration.
         transportSpace: Cargo capacity.
         structure: Structure type.
-        structureTechbase: Structure tech base.
-        armorTechbase: Armor tech base.
-        barRating: Barrier armor rating.
         productionEra: Production era ID.
         hasControlSystems: Whether vehicle has control systems.
         heatSinks: Heat sink count (if equipped).
-        heatSinksTechbase: Heat sink tech base.
-        heatSinksType: Heat sink type.
-        heatSinksEngineBase: Engine-integrated heat sinks.
-        heatSinksOmniBase: Omni heat sinks.
         isTrailer: Whether this is a trailer unit.
         extraCombatSeats: Additional crew/passenger seats.
         jumpjetType: Jump jet type (for jump-capable vehicles).
@@ -1020,15 +988,9 @@ class TotalWarDropshipData(TotalWarUnitDataBase):
         bays: List of cargo/unit bays.
         quarters: Crew quarters information.
         crewValues: Crew requirements.
-        armorTechbase: Armor tech base.
         heatSinks: Heat sink count.
-        heatSinksTechbase: Heat sink tech base.
-        heatSinksType: Heat sink type.
         structuralIntegrity: Hull integrity value.
-        engineRating: Drive rating.
-        engineTechbase: Engine tech base.
         chassisType: Hull configuration.
-        barRating: Barrier armor rating.
         fuel: Fuel capacity.
     """
     bays: Optional[List[TotalWarBayExtendedItem]] = Field(

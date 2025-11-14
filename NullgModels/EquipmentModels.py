@@ -205,6 +205,7 @@ class ArmorItem(BaseEquipmentItem):
     armorType: Optional[str] = Field(description="", default=None)
     displayOrder: Optional[int] = Field(description="", default=None)
     spreadable: Optional[bool] = Field(description="", default=None)
+    damageDivisor: Optional[float] = Field(description="", default=None)
 
 
 class MyomerItem(BaseEquipmentItem):
