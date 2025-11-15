@@ -163,6 +163,9 @@ class WeaponItem(BaseEquipmentItem):
     longAV: Optional[float] = Field(description="", default=None)
     medAV: Optional[float] = Field(description="", default=None)
     shortAV: Optional[float] = Field(description="", default=None)
+    massDivisor: Optional[float] = Field(description="", default=None)
+    bviModifier: Optional[float] = Field(description="", default=None)
+    additionalDamage: Optional[int] = Field(description="", default=None)
     capacitorBv: Optional[int] = Field(
         description="Unique to Inner Sphere PPCs. This is the additional BV cost for"
                     "attaching a capacitor to the PPC.",
@@ -200,16 +203,16 @@ class WeaponBayItem(BaseEquipmentItem):
 
 
 class ArmorItem(BaseEquipmentItem):
-    armorBVModifier: Optional[float] = Field(description="", default=None)
-    armorPointsModifier: Optional[float] = Field(description="", default=None)
-    armorType: Optional[str] = Field(description="", default=None)
-    displayOrder: Optional[int] = Field(description="", default=None)
-    spreadable: Optional[bool] = Field(description="", default=None)
-    damageDivisor: Optional[float] = Field(description="", default=None)
+    bvModifier: Optional[float] = Field(description="", default=1.0, examples=[1.0, 1.5, 2.0])
+    armorPointsModifier: Optional[float] = Field(description="", default=1.0, examples=[1.0, 1.5, 2.0])
+    armorType: Optional[str] = Field(description="", default="standard", examples=["standard", "special"])
+    displayOrder: Optional[int] = Field(description="", default=0, examples=[1, 2, 4])
+    spreadable: Optional[bool] = Field(description="", default=False, examples=[True, False])
+    damageDivisor: Optional[float] = Field(description="", default=1.0, examples=[1.0, 1.5, 2.0])
 
 
 class MyomerItem(BaseEquipmentItem):
-    massdivisor: Optional[int] = Field(description="", default=None)
+    massDivisor: Optional[int] = Field(description="", default=None)
     myomerType: Optional[str] = Field(description="", default=None)
 
 

@@ -13,6 +13,12 @@ from NullgModels.TotalWarModels import TotalWarDropshipData, TotalWarInfantryDat
 
 
 class BasicItem(NullGBaseModel):
+    """
+    Minimal, generic item record used for simple lists and lookups.
+
+    This model is typically used where only an identifier, name, and optional
+    category are required (e.g., dropdowns, summary tables, lightweight APIs).
+    """
     category: Optional[str] = Field(
         description="Category of the item",
         default=None
@@ -26,7 +32,13 @@ class BasicItem(NullGBaseModel):
 
 
 class EraItem(NullGBaseModel):
-    """ Era BaseModel - Describes an era in the NullG database """
+    """
+    Era record used to describe a Battletech/setting era in the NullG database.
+
+    Each era has a unique ID (usually corresponding to the Master Unit List),
+    a human‑readable name, and the in‑universe start/end years that bound it.
+    These IDs are referenced by units, availability data, and filters.
+    """
     id: int = Field(
         description="Integer, this is the era's unique identifier based on MUL",
         examples=["9", "10", "255"]
@@ -46,7 +58,13 @@ class EraItem(NullGBaseModel):
 
 
 class BoxsetItem(NullGBaseModel):
-    """ Boxset BaseModel - Describes a boxset in the NullG database """
+    """
+    Physical box set definition.
+
+    Represents a boxed product that contains one or more models or units.
+    The `id` is usually the physical barcode and can be cross‑referenced
+    from units via their barcodes list.
+    """
     id: str = Field(
         description="ID, this is the barcode of the physical box and corresponds to the barcodes field on units",
         examples=["0850011819135"]
@@ -83,6 +101,15 @@ class BoxsetItem(NullGBaseModel):
 
 # MUL BaseModel
 class MULUnitItem(NullGBaseModel):
+    """
+    Master Unit List (MUL) unit entry.
+
+    Represents a single unit record as defined in the Master Unit List,
+    including its MUL type, mass, BV, PV, role, rules level, era info and
+    associated NullG UUID. This model is generally used as the canonical
+    metadata source for a unit before it is combined with detailed rules
+    data (e.g., Total War or Alpha Strike implementations).
+    """
     mulTypeId: int = Field(
         description="Type ID",
         examples=["18"]
@@ -162,11 +189,33 @@ class MULUnitItem(NullGBaseModel):
 
     @field_validator('pullDate', mode='before')
     def validate_pullDate_type(cls, v: datetime) -> str:
+        """
+        Normalize `pullDate` to a string representation.
+
+        Accepts `datetime` instances and converts them to ISO‑like strings
+        so the stored value is always a string regardless of input type.
+        """
         return str(v)
 
-# Unit BaseModel
 
+# Unit BaseModel
 class UnitData(NullGBaseModel):
+    """
+    Core unit data model used throughout NullG.
+
+    This model represents a single game unit (e.g., a 'Mech, vehicle, infantry
+    platoon, aerospace unit, etc.) at a logical/metadata level. It ties together:
+    - High‑level identity and production details (name, model, era, mass)
+    - Classification (type, subtype, role, weight class, rules level)
+    - Cross‑references (MUL ID, barcodes, factions, category)
+    - System‑specific rule data (Alpha Strike, Total War)
+    - Calculated statistics (BV, PV and related breakdowns)
+    - Associated pilots and notes
+
+    It intentionally does not enforce a specific ruleset implementation;
+    instead, rules data is stored in nested models such as `alphaStrike`
+    and `totalWar`.
+    """
     id: Optional[str] = Field(description="ID of the unit", default=None, title="ID")
     name: Optional[str] = Field(description="Name of the unit", default=None, title="Name")
     model: Optional[str] = Field(description="Model of the unit", default=None, title="Model")
@@ -210,6 +259,18 @@ class UnitData(NullGBaseModel):
     @field_validator(FIELD_TOTAL_WAR, mode='before')
     @classmethod
     def validate_totalwar_type(cls, v: Dict, info: ValidationInfo):
+        """
+        Coerce raw Total War payloads into the correct rules model based on unit type.
+
+        This validator:
+        - Expects `v` to be a dict (raw incoming JSON for Total War data)
+        - Reads `unitType` from the surrounding model data
+        - Maps that type to the appropriate `TotalWar*Data` class
+        - Instantiates and returns the correct Pydantic model
+
+        If the unit type is missing, invalid, or unrecognized, a `ValueError`
+        is raised to prevent storing inconsistent data.
+        """
         if v is not None and isinstance(v, dict):
             if FIELD_UNIT_TYPE in info.data and isinstance(info.data[FIELD_UNIT_TYPE], int):
                 try:
@@ -236,6 +297,17 @@ class UnitData(NullGBaseModel):
 
 
 class UnitDataExtended(UnitData):
+    """
+    Extended unit data model that includes full MUL and detailed Total War data.
+
+    This subclass of `UnitData` is used when the caller needs:
+    - The full linked MUL record (`mulData`)
+    - Fully expanded equipment and Total War implementation details
+      (using the `*ExtendedData` rule models)
+
+    It is typically returned by endpoints or internal services that resolve
+    and hydrate all related data, rather than by lightweight listing APIs.
+    """
     expanded: bool = Field(
         description="Is the unit data expanded to include full equipment and Mul data",
         default=True,
@@ -253,6 +325,12 @@ class UnitDataExtended(UnitData):
     @field_validator(FIELD_TOTAL_WAR, mode='before')
     @classmethod
     def validate_totalwar_type(cls, v: Dict, info: ValidationInfo):
+        """
+        Coerce raw Total War payloads into the correct *extended* rules model.
+
+        Similar to `UnitData.validate_totalwar_type`, but uses the extended
+        Total War models that include full equipment and other expanded data.
+        """
         if v is not None and isinstance(v, dict):
             if FIELD_UNIT_TYPE in info.data and isinstance(info.data[FIELD_UNIT_TYPE], int):
                 try:
