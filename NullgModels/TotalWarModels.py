@@ -479,6 +479,8 @@ class TotalWarUnitDataBase(NullGBaseModel):
     Attributes:
         armor: Total armor points across all locations.
         bv: Battle Value (game balance/cost metric).
+        constructionInvalid: List of construction rule violations.
+        constructionValidated: Whether construction has been validated.
         config: Configuration type (Standard, Omni, etc.).
         mass: Unit mass/tonnage.
         pv: Point Value (Alpha Strike compatibility).
@@ -517,6 +519,23 @@ class TotalWarUnitDataBase(NullGBaseModel):
         default=None,
         examples=["Standard", "Omni", "ProtoMech"]
     )
+    constructionInvalid: Optional[List[str]] = Field(
+        description="List of construction rule violations if unit is invalid. "
+                    "Empty list or None means unit is valid. "
+                    "Common issues: overweight, insufficient heat sinks, invalid equipment.",
+        default=None,
+        examples=[
+            ["Unit exceeds maximum tonnage"],
+            ["Insufficient heat dissipation", "Armor exceeds maximum"],
+            []
+        ]
+    )
+    constructionValidated: Optional[bool] = Field(
+        description="Whether the unit has undergone construction validation. "
+                    "True=validated (may still be invalid), False/None=not validated.",
+        default=None
+    )
+
     mass: Optional[float] = Field(
         description="Unit mass in tons. Affects movement, armor capacity, and weapon load. "
                     "BattleMechs: 20-100 tons. Vehicles: 5-100+ tons. Infantry: per trooper.",
@@ -656,8 +675,6 @@ class TotalWarBattleMechData(TotalWarUnitDataBase):
 
     Attributes:
         cockpit: Cockpit type (Standard, Small, Command, etc.).
-        constructionInvalid: List of construction rule violations.
-        constructionValidated: Whether construction has been validated.
         engine: Full engine description string.
         extraOptions: Additional construction options flags.
         gyro: Gyroscope type (Standard, XL, Compact, Heavy-Duty).
@@ -692,22 +709,6 @@ class TotalWarBattleMechData(TotalWarUnitDataBase):
                     "Torso-Mounted, Interface, etc.",
         default=None,
         examples=["Standard", "Small", "Command Console", "Torso-Mounted"]
-    )
-    constructionInvalid: Optional[List[str]] = Field(
-        description="List of construction rule violations if unit is invalid. "
-                    "Empty list or None means unit is valid. "
-                    "Common issues: overweight, insufficient heat sinks, invalid equipment.",
-        default=None,
-        examples=[
-            ["Unit exceeds maximum tonnage"],
-            ["Insufficient heat dissipation", "Armor exceeds maximum"],
-            []
-        ]
-    )
-    constructionValidated: Optional[bool] = Field(
-        description="Whether the unit has undergone construction validation. "
-                    "True=validated (may still be invalid), False/None=not validated.",
-        default=None
     )
     engine: Optional[TotalWarEngineComponent] = Field(
         description="Full engine description string combining rating and type. "
@@ -775,9 +776,6 @@ class TotalWarAerospaceData(TotalWarUnitDataBase):
 
     Attributes:
         cockpit: Cockpit type for aerospace.
-        constructionInvalid: Construction validation errors.
-        constructionValidated: Validation status.
-        extraOptions: Additional options dictionary.
         fuel: Fuel capacity in points.
         transportSpace: Cargo/transport capacity.
         heatSinks: Total heat sinks.
@@ -790,14 +788,6 @@ class TotalWarAerospaceData(TotalWarUnitDataBase):
         description="Cockpit type for aerospace fighters.",
         default=None,
         examples=[""]
-    )
-    constructionInvalid: Optional[List[str]] = Field(
-        description="List of construction rule violations.",
-        default=None
-    )
-    constructionValidated: Optional[bool] = Field(
-        description="Whether construction has been validated.",
-        default=None
     )
     engine: Optional[TotalWarEngineComponent] = Field(
         description="Engine description string. Format: '[Rating] [Type] Engine'.",
@@ -847,9 +837,6 @@ class TotalWarInfantryData(TotalWarUnitDataBase):
     infantry). They use different rules than vehicle/mech units.
 
     Attributes:
-        constructionInvalid: Construction validation errors.
-        constructionValidated: Validation status.
-        extraOptions: Additional options.
         structure: Structure type.
         trooperMass: Mass per individual trooper.
         productionEra: Production era ID.
@@ -857,15 +844,9 @@ class TotalWarInfantryData(TotalWarUnitDataBase):
         squadSize: Troopers per squad.
         secondaryWeaponTroops: Troopers with secondary weapons.
         isExoskeleton: Whether this is exoskeleton infantry.
+        augmentation: List of augmentation types.
+        antiMechSkill: Anti-Mech skill level.
     """
-    constructionInvalid: Optional[List[str]] = Field(
-        description="List of construction rule violations.",
-        default=None
-    )
-    constructionValidated: Optional[bool] = Field(
-        description="Whether construction has been validated.",
-        default=None
-    )
     structure: Optional[TotalWarStructureComponent] = Field(
         description="Structure type (battle armor).",
         default=None,
@@ -902,6 +883,16 @@ class TotalWarInfantryData(TotalWarUnitDataBase):
         description="Whether this is exoskeleton-equipped infantry (light power armor).",
         default=False
     )
+    antiMechSkill: Optional[int] = Field(
+        description="Whether this unit has anti-mech skill.",
+        default=0,
+        examples=[4, 7, 8]
+    )
+    augmentation: Optional[List[str]] = Field(
+        description="List of augmentations applied to the unit.",
+        default_factory=list,
+        examples=[["cyber_imp_visual", "cyber_imp_laser"]]
+    )
 
 
 class TotalWarVehicleData(TotalWarUnitDataBase):
@@ -911,9 +902,6 @@ class TotalWarVehicleData(TotalWarUnitDataBase):
     other ground/naval combat units.
 
     Attributes:
-        constructionInvalid: Construction validation errors.
-        constructionValidated: Validation status.
-        extraOptions: Additional options.
         turretType: Turret configuration.
         transportSpace: Cargo capacity.
         structure: Structure type.
@@ -924,14 +912,6 @@ class TotalWarVehicleData(TotalWarUnitDataBase):
         extraCombatSeats: Additional crew/passenger seats.
         jumpjetType: Jump jet type (for jump-capable vehicles).
     """
-    constructionInvalid: Optional[List[str]] = Field(
-        description="List of construction rule violations.",
-        default=None
-    )
-    constructionValidated: Optional[bool] = Field(
-        description="Whether construction has been validated.",
-        default=None
-    )
     engine: Optional[TotalWarEngineComponent] = Field(
         description="Engine type and rating.",
         default_factory=TotalWarEngineComponent,
