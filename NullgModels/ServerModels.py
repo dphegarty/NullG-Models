@@ -147,7 +147,7 @@ class SearchFilter(BaseModel):
         description="Page number to retrieve (1-indexed). Used for pagination of results.",
         default=1,
         ge=1,
-        le=20,
+        le=1000,
         examples=[1, 2, 3]
     )
     itemsPerPage: Optional[int] = Field(
