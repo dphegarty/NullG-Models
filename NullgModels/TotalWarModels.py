@@ -799,7 +799,7 @@ class TotalWarAerospaceData(TotalWarUnitDataBase):
         default=None,
         examples=[400, 800, 1600]
     )
-    transportSpace: Optional[Dict] = Field(
+    transportSpace: Optional[List[TotalWarBayBaseItem]] = Field(
         description="Cargo or transport capacity in tons.",
         default=None,
         examples=[]
@@ -922,7 +922,7 @@ class TotalWarVehicleData(TotalWarUnitDataBase):
         default=None,
         examples=[0, 1, 2]
     )
-    transportSpace: Optional[TotalWarBayBaseItem] = Field(
+    transportSpace: Optional[List[TotalWarBayBaseItem]] = Field(
         description="Cargo or infantry transport capacity in tons.",
         default=None,
         examples=[0, 2.5, 5.0, 10.0]
