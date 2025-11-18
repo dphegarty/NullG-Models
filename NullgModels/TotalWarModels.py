@@ -20,7 +20,7 @@ https://bg.battletech.com/books/total-warfare/
 """
 
 from typing import Optional, List, Dict, Literal, Union
-from pydantic import Field
+from pydantic import Field, computed_field
 
 from NullgModels.EquipmentModels import EquipmentItem
 from NullgModels.NullGBaseModels import NullGBaseModel
@@ -828,6 +828,27 @@ class TotalWarAerospaceData(TotalWarUnitDataBase):
         description="Production era ID.",
         default=None
     )
+    extraHardPoints: Optional[int] = Field(
+        description="Extra Hard Points to carry ordnance",
+        default=0,
+        examples=[0, 1, 2, 3]
+    )
+    externalStores: Optional[int] = Field(
+        description="External Stores to carry ordnance",
+        default=0,
+        examples=[0, 1, 2, 3]
+    )
+    structuralIntegrity: Optional[int] = Field(
+        description="Structural integrity rating. "
+                    "Higher values increase combat strength and durability.",
+        default=0,
+        examples=[1, 2, 3, 4]
+    )
+
+    @computed_field(description="Total external storage capacity.")
+    @property
+    def externalStorage(self) -> int:
+        return self.externalStores + self.extraHardPoints
 
 
 class TotalWarInfantryData(TotalWarUnitDataBase):
