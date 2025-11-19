@@ -8,6 +8,17 @@ from NullgModels.NullGBaseModels import NullGBaseModel
 from NullgModels.NullGEnums import EquipmentType, TechbaseType
 
 class EquipmentWeaponDamage(NullGBaseModel):
+    """
+    Defines damage values for weapons across standard BattleTech range brackets
+    and against infantry targets.
+
+    Attributes:
+        short: Short range damage value
+        medium: Medium range damage value
+        long: Long range damage value
+        infantry: Infantry damage value
+        infantryBurst: Infantry burst damage value
+    """
     short: Optional[float] = Field(description="Short range damage value", default=0, examples=[10, 5, 0])
     medium: Optional[float] = Field(description="Medium range damage value", default=0, examples=[25, 10, 0])
     long: Optional[float] = Field(description="Long range damage value", default=0, examples=[5, 15, 0])
@@ -15,6 +26,16 @@ class EquipmentWeaponDamage(NullGBaseModel):
     infantryBurst: Optional[float] = Field(description="Infantry burst damage value", default=0, examples=[0.71, 0.55, 0.16])
 
 class EquipmentWeaponRanges(NullGBaseModel):
+    """
+    Specifies the range brackets (in hexes) for a weapon or piece of equipment.
+
+    Attributes:
+        minimum: Minimum range value
+        short: Short range value
+        medium: Medium range value
+        long: Long range value
+        infantry: Infantry range value
+    """
     minimum: Optional[int] = Field(description="Minimum range value", default=0, examples=[1, 3, 5])
     short: Optional[int] = Field(description="Short range value", default=0, examples=[10, 5, 0])
     medium: Optional[int] = Field(description="Medium range value", default=0, examples=[25, 10, 0])
@@ -22,6 +43,20 @@ class EquipmentWeaponRanges(NullGBaseModel):
     infantry: Optional[int] = Field(description="Infantry range value", default=0, examples=[1, 3, 4])
 
 class EquipmentAlphaStrike(NullGBaseModel):
+    """
+    Contains statistical data and special abilities for converting this equipment
+    to Alpha Strike gameplay mechanics.
+
+    Attributes:
+        extreme: Extreme range damage values
+        long: Long range damage values
+        medium: Medium range damage values
+        short: Short range damage values
+        artillery: Artillery damage values
+        radius: Radius of artillery damage values
+        tc: Can this use a Targeting Computer
+        specials: List of special abilities conferred by this equipment
+    """
     extreme: Optional[List[float]] = Field(description="Extreme range damage values", default=[0.0,0.0,0.0])
     long: Optional[List[float]] = Field(description="Long range damage values", default=[0.0,0.0,0.0])
     medium: Optional[List[float]] = Field(description="Medium range damage values", default=[0.0,0.0,0.0])
@@ -41,17 +76,17 @@ class EquipmentTypeData(BaseModel):
 
     Key characteristics about the equipment.
     """
-    isBeagleActiveProbe: bool = Field(description="", default=False, examples=[True, False])
+    isBeagleActiveProbe: bool = Field(description="is function as a Beagle Active Probe", default=False, examples=[True, False])
     isInfantryEncumbered: bool = Field(description="Does this encumber infantry", default=False, examples=[True, False])
-    isECM: bool = Field(description="", default=False, examples=[True, False])
-    isAngelECM: bool = Field(description="", default=False, examples=[True, False])
-    isWatchdog: bool = Field(description="", default=False, examples=[True, False])
-    isNOVA: bool = Field(description="", default=False, examples=[True, False])
-    isBloodhound: bool = Field(description="", default=False, examples=[True, False])
-    isEWEquipment: bool = Field(description="", default=False, examples=[True, False])
-    isMiscType: bool = Field(description="", default=False, examples=[True, False])
-    isBAManipulator: bool = Field(description="", default=False, examples=[True, False])
-    isTAG: bool = Field(description="", default=False, examples=[True, False])
+    isECM: bool = Field(description="Does this function as an ECM device", default=False, examples=[True, False])
+    isAngelECM: bool = Field(description="Does this function as an Angel ECM", default=False, examples=[True, False])
+    isWatchdog: bool = Field(description="Does this function as a Watch dog device", default=False, examples=[True, False])
+    isNOVA: bool = Field(description="does this function as a NOVA device", default=False, examples=[True, False])
+    isBloodhound: bool = Field(description="does this function as a Bloodhound device", default=False, examples=[True, False])
+    isEWEquipment: bool = Field(description="does this function as a Electronic Warfare equipment, not a full ECM suite", default=False, examples=[True, False])
+    isMiscType: bool = Field(description="is this a Miscellaneous device", default=False, examples=[True, False])
+    isBAManipulator: bool = Field(description="is this a Battle Armor Manipulator", default=False, examples=[True, False])
+    isTAG: bool = Field(description="does this item provide TAG functionality", default=False, examples=[True, False])
     isDefensive: bool = Field(description="Is this considered defensive equipment", default=False, examples=[True, False])
     isDisplayed: bool = Field(description="Show this be displayed on a record sheet", default=False, examples=[True, False])
     isEditable: bool = Field(description="Is this an editable critical slot", default=False, examples=[True, False])
@@ -80,6 +115,12 @@ class EquipmentTypeData(BaseModel):
 
 
 class WeaponClassification(BaseModel):
+    """
+    A collection of boolean flags categorizing weapons by their type (Ballistic, Energy, Missile),
+    technology base (Pulse, Ultra, Streak), and special rules (Indirect, Rapid Fire).
+
+    Attributes:
+    """
     isInfantryBurst: bool = Field(description="Is consider burst weapon against infantry", default=False, examples=[True, False])
     isInfantryNonPen: bool = Field(description="Does this count as non-penetrating against infantry", default=False, examples=[True, False])
     isInfantryWeapon: bool = Field(description="Does this count as an infantry", default=False, examples=[True, False])
@@ -126,6 +167,9 @@ class WeaponClassification(BaseModel):
     useTargetingComputer: bool = Field(description="Can this use a targeting computer", default=False, examples=[True, False])
 
 class EquipmentUnitTypes(NullGBaseModel):
+    """
+    Defines which unit types are legally allowed to mount this specific piece of equipment.
+    """
     battlearmor: Optional[bool] = Field(default=False, description="Can be used by Battle Armor")
     fighters: Optional[bool] = Field(default=False, description="Can be used by Fighters")
     infantry: Optional[bool] = Field(default=False, description="Can be used by Infantry")
@@ -140,6 +184,10 @@ class EquipmentUnitTypes(NullGBaseModel):
 
 
 class BaseEquipmentItem(NullGBaseModel):
+    """
+    Base class for all specific equipment item data, containing shared physical
+    and economic attributes like mass, cost, and Battle Value.
+    """
     alphaStrike: Optional[EquipmentAlphaStrike] = Field(description="", default=None)
     bv: Optional[float] = Field(description="", default=None)
     cost: Optional[float] = Field(description="", default=None)
@@ -152,6 +200,16 @@ class BaseEquipmentItem(NullGBaseModel):
 
 
 class WeaponItem(BaseEquipmentItem):
+    """
+    Represents a weapon system, including its damage profile, heat generation,
+    range brackets, and classification rules.
+
+    Attributes:
+        canSplit: Can this weapon be split into multiple locations
+        clusterSize: The number of units that can be split into multiple locations
+        bayType: The type of bay (Infantry, Battle Armor).
+        crew: Number of crew to operate the weapon
+    """
     canSplit: Optional[bool] = Field(description="", default=None)
     clusterSize: Optional[int] = Field(description="", default=None)
     bayType: Optional[str] = Field(description="", default=None)
@@ -181,19 +239,49 @@ class WeaponItem(BaseEquipmentItem):
     classification: WeaponClassification = Field(description="Weapon classification data", default_factory=WeaponClassification)
 
 class OtherItem(BaseEquipmentItem):
+    """
+    Represents miscellaneous equipment that does not fit into standard categories
+    like weapons, ammo, or engines.
+
+    Attributes:
+        bayType: The type of bay.
+    """
     bayType: Optional[str] = Field(description="", default=None)
 
 
 class CockpitItem(BaseEquipmentItem):
+    """
+    Represents cockpit systems and command consoles, including their specific
+    modifiers and types.
+
+    Attributes:
+        bv
+        cockpitType: The type of cockpit (Standard, Advanced, Expert).
+    """
     bvModifier: Optional[float] = Field(description="", default=None)
     cockpitType: Optional[str] = Field(description="", default=None)
 
 
 class EnhancementItem(BaseEquipmentItem):
+    """
+    Represents equipment that enhances unit performance or existing systems.
+    """
     pass
 
 
 class WeaponBayItem(BaseEquipmentItem):
+    """
+    Represents mounting bays for weapons, typically used on infantry or battle armor
+    to carry support weaponry.
+
+    Attributes:
+        bayType: The type of bay (Infantry, Battle Armor).
+        damage: The damage distribution rules for the bay.
+        heat: The maximum heat generation for the bay.
+        longRange: The maximum range for the bay.
+        mediumRange: The maximum medium range for the bay.
+        shortRange: The maximum short range for the bay.
+    """
     bayType: Optional[str] = Field(description="", default=None)
     damage: Optional[dict] = Field(description="", default=None)
     heat: Optional[int] = Field(description="", default=None)
@@ -203,6 +291,18 @@ class WeaponBayItem(BaseEquipmentItem):
 
 
 class ArmorItem(BaseEquipmentItem):
+    """
+    Represents armor plating, defining protection per ton, type (Standard, Ferro-Fibrous),
+    and damage distribution rules.
+
+    Atributes:
+        bvModifier: The modifier to apply to the BV cost of the armor.
+        armorPointsModifier: The modifier to apply to the armor points of the armor.
+        armorType: The type of armor (Standard, Ferro-Fibrous).
+        displayOrder: The display order of the armor.
+        spreadable: Whether the armor can be spread across multiple locations.
+        damageDivisor: The modifier to apply to the damage of the armor.
+    """
     bvModifier: Optional[float] = Field(description="", default=1.0, examples=[1.0, 1.5, 2.0])
     armorPointsModifier: Optional[float] = Field(description="", default=1.0, examples=[1.0, 1.5, 2.0])
     armorType: Optional[str] = Field(description="", default="standard", examples=["standard", "special"])
@@ -212,25 +312,64 @@ class ArmorItem(BaseEquipmentItem):
 
 
 class MyomerItem(BaseEquipmentItem):
+    """
+    Represents musculature enhancements like MASC or Triple Strength Myomer (TSM).
+
+    Attributes:
+        massDivisor: The modifier to apply to the mass of the myomer.
+        myomerType: The type of myomer (MASC, TSM).
+    """
     massDivisor: Optional[int] = Field(description="", default=None)
     myomerType: Optional[str] = Field(description="", default=None)
 
 
 class ManipulatorItem(BaseEquipmentItem):
+    """
+    Represents physical manipulators such as hands, claws, or mining drills.
+
+    Attributes:
+        shortName: The short name of the manipulator.
+    """
     shortName: Optional[str] = Field(description="", default=None)
 
 
 class ConversionItem(BaseEquipmentItem):
+    """
+    Represents equipment used for converting or adapting other systems.
+    """
     pass
 
 
 class StructureItem(BaseEquipmentItem):
+    """
+    Represents internal structure components (e.g., Endo-Steel, Composite), including
+    mass saving modifiers.
+
+    Attributes:
+        bvModifier: The modifier to apply to the BV cost of the structure.
+        massModifier: The modifier to apply to the mass of the structure.
+        structureType: The type of structure (e.g., Endo-Steel, Composite).
+
+    """
     bvModifier: Optional[float] = Field(description="", default=None)
     massModifier: Optional[float] = Field(description="", default=None)
     structureType: Optional[str] = Field(description="", default=None)
 
 
 class EngineItem(BaseEquipmentItem):
+    """
+    Represents power plant systems (Fusion, ICE, Fuel Cell), detailing rating modifiers,
+    weight classes, and integral heat sinks.
+
+    Attributes:
+        assignedSlots: The number of slots assigned to the engine.
+        bvModifier: The modifier to apply to the BV cost of the engine.
+        displayName: The display name of the engine.
+        engineClass: The class of engine (Fusion, ICE, Fuel Cell).
+        engineRatingMod: The modifier to apply to the engine rating.
+        includedHeatSinks: The number of heat sinks included in the engine.
+        powerAmplifierNeeded: Whether a power amplifier is needed for the engine.
+    """
     assignedSlots: Optional[Dict[str, int]] = Field(description="", default=None)
     bvModifier: Optional[float] = Field(description="", default=None)
     displayName: Optional[str] = Field(description="", default=None)
@@ -241,6 +380,15 @@ class EngineItem(BaseEquipmentItem):
 
 
 class GyroItem(BaseEquipmentItem):
+    """
+    Represents gyroscope systems, including standard, extra-light, and heavy-duty variants.
+
+    Attributes:
+        bvModifier: The modifier to apply to the BV cost of the gyro.
+        displayName: The display name of the gyro.
+        gyroType: The type of gyro (standard, extra-light, heavy-duty).
+        massModifier: The modifier to apply to the mass of the gyro.
+    """
     bvModifier: Optional[float] = Field(description="", default=None)
     displayName: Optional[str] = Field(description="", default=None)
     gyroType: Optional[str] = Field(description="", default=None)
@@ -248,14 +396,27 @@ class GyroItem(BaseEquipmentItem):
 
 
 class BayItem(BaseEquipmentItem):
+    """
+    Represents transport and cargo bays, detailing capacity for personnel or goods.
+
+    Attributes:
+        crew: The number of crew members that can be mounted on the bay.
+    """
     crew: Optional[int] = Field(description="", default=None)
 
 
 class HeatSinkItem(BaseEquipmentItem):
+    """
+    Represents heat dissipation systems, distinguishing between Single and Double heat sinks.
+    """
     pass
 
 
 class AmmoItem(BaseEquipmentItem):
+    """
+    Represents ammunition bins, detailing shots per ton, projectile weight, and
+    associated weapon compatibility.
+    """
     ammoRatio: Optional[float] = Field(description="", default=None)
     defensive: Optional[bool] = Field(description="", default=None)
     equipName: Optional[str] = Field(description="", default=None)
@@ -267,6 +428,10 @@ class AmmoItem(BaseEquipmentItem):
 
 
 class EquipmentItem(NullGBaseModel):
+    """
+    The primary container for an equipment entry, aggregating metadata, classification flags,
+    applicability rules, and the specific item data model.
+    """
     id: Optional[str] = Field(description="", default=None)
     equipmentType: Optional[EquipmentType] = Field(description="", default=None)
     name: Optional[str] = Field(description="", default=None)
