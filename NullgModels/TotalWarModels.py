@@ -25,7 +25,7 @@ from pydantic import Field, computed_field
 from NullgModels.EquipmentModels import EquipmentItem
 from NullgModels.NullGBaseModels import NullGBaseModel
 from NullgModels.NullGEnums import TurretType, JumpJetType, TotalWarEquipmentItemType, MotionType, WeightClassType, \
-    RoleType
+    RoleType, EquipmentType
 
 
 class TotalWarBasicComponent(NullGBaseModel):
@@ -61,8 +61,8 @@ class TotalWarBasicComponent(NullGBaseModel):
         default=None,
         examples=["Inner Sphere", "Clan", "Mixed"]
     )
-    equipmentTypeId: Optional[Literal[0, 3, 5, 6, 8, 4]] = Field(
-        description="Equipment type Id",
+    equipmentType: Optional[EquipmentType] = Field(
+        description="Equipment type",
         default=None,
         examples=[0, 3, 5, 6, 8, 4]
     )
@@ -89,8 +89,8 @@ class TotalWarArmorComponent(TotalWarBasicComponent):
         le=10,
         examples=[10, 5]
     )
-    equipmentTypeId: Optional[int] = Field(
-        description="Equipment type Id",
+    equipmentType: Optional[EquipmentType] = Field(
+        description="Equipment type",
         default=0
     )
 
@@ -119,7 +119,7 @@ class TotalWarEngineComponent(TotalWarBasicComponent):
         default=None,
         examples=["Standard", "XL", "Compact"]
     )
-    equipmentTypeId: Optional[int] = Field(
+    equipmentType: Optional[EquipmentType] = Field(
         description="Equipment type Id",
         default=3
     )
@@ -139,7 +139,7 @@ class TotalWarStructureComponent(TotalWarBasicComponent):
         ... )
 
     """
-    equipmentTypeId: Optional[int] = Field(
+    equipmentType: Optional[EquipmentType] = Field(
         description="Equipment type Id",
         default=5
     )
@@ -158,7 +158,7 @@ class TotalWarMyomerComponent(TotalWarBasicComponent):
         ... )
 
     """
-    equipmentTypeId: Optional[int] = Field(
+    equipmentType: Optional[EquipmentType] = Field(
         description="Equipment type Id",
         default=8
     )
@@ -177,7 +177,7 @@ class TotalWarGyroComponent(TotalWarBasicComponent):
         ... )
 
     """
-    equipmentTypeId: Optional[int] = Field(
+    equipmentType: Optional[EquipmentType] = Field(
         description="Equipment type Id",
         default=4
     )
@@ -196,7 +196,7 @@ class TotalWarCockpitComponent(TotalWarBasicComponent):
         ... )
 
     """
-    equipmentTypeId: Optional[int] = Field(
+    equipmentType: Optional[EquipmentType] = Field(
         description="Equipment type Id",
         default=6
     )
@@ -206,7 +206,7 @@ class TotalWarHeatSinkComponent(TotalWarBasicComponent):
 
     Represents a gyro component of a unit in Total Warfare. Gyro
     items have specific properties like type, material, and durability."""
-    equipmentTypeId: Optional[int] = Field(
+    equipmentType: Optional[EquipmentType] = Field(
         description="Equipment type Id",
         default=10
     )
