@@ -239,47 +239,49 @@ class UnitSubtype(IntEnum):
     characteristics and construction rules.
     
     Attributes:
-        Aerodyne: Aerodyne DropShip (streamlined) (ID: 0).
-        AerospaceFighter: Standard aerospace fighter (ID: 1).
-        BattleArmor: Powered battle armor infantry (ID: 2).
-        BattleMech: Standard BattleMech (ID: 3).
-        CombatVehicle: Military combat vehicle (ID: 4).
-        ConvFighter: Conventional fighter aircraft (ID: 5).
-        Conventional: Conventional infantry (ID: 6).
-        ConventionalFighter: Conventional atmospheric fighter (ID: 7).
-        FixedWingSupport: Fixed-wing support aircraft (ID: 8).
-        IndustrialMech: Industrial work mech (ID: 9).
-        OmniFighter: Omni-configuration fighter (ID: 10).
-        OmniMech: Omni-configuration BattleMech (ID: 11).
-        Spheroid: Spheroid DropShip (egg-shaped) (ID: 12).
-        SupportVehicle: Non-combat support vehicle (ID: 13).
+        aerodyne: Aerodyne DropShip (streamlined) (ID: 0).
+        aerospaceFighter: Standard aerospace fighter (ID: 1).
+        battleArmor: Powered battle armor infantry (ID: 2).
+        battleMech: Standard BattleMech (ID: 3).
+        combatVehicle: Military combat vehicle (ID: 4).
+        smallCraft: Small craft (ID: 5).
+        conventionalInfantry: Conventional infantry (ID: 6).
+        conventionalFighter: Conventional atmospheric fighter (ID: 7).
+        fixedWingSupport: Fixed-wing support aircraft (ID: 8).
+        industrialMech: Industrial work mech (ID: 9).
+        omniFighter: Omni-configuration fighter (ID: 10).
+        omniMech: Omni-configuration BattleMech (ID: 11).
+        spheroid: Spheroid DropShip (egg-shaped) (ID: 12).
+        supportVehicle: Non-combat support vehicle (ID: 13).
+        omniVehicle: Omni-configuration vehicle (ID: 14).
+        warship: Warship (ID: 15).
         
     Usage:
         Filter for specific subtypes:
-        >>> {"unitSubtypeId": UnitSubtype.OmniMech}  # Find OmniMechs
-        >>> {"unitSubtypeId": {"$in": [3, 11]}}  # BattleMechs and OmniMechs
+        >>> {"unitSubtypeId": UnitSubtype.omniMech}  # Find OmniMechs
         
     Examples:
-        >>> UnitSubtype.BattleMech
+        >>> UnitSubtype.battleMech
         3
-        >>> UnitSubtype.OmniMech.name
-        'OmniMech'
+        >>> UnitSubtype.omniMech.name
+        'omniMech'
     """
-    Aerodyne = 0
-    AerospaceFighter = 1
-    BattleArmor = 2
-    BattleMech = 3
-    CombatVehicle = 4
-    ConvFighter = 5
-    Conventional = 6
-    ConventionalFighter = 7
-    FixedWingSupport = 8
-    IndustrialMech = 9
-    OmniFighter = 10
-    OmniMech = 11
-    Spheroid = 12
-    SupportVehicle = 13
-    OmniVehicle = 14
+    aerodyne = 0
+    aerospaceFighter = 1
+    battleArmor = 2
+    battleMech = 3
+    combatVehicle = 4
+    smallCraft = 5
+    conventionalInfantry = 6
+    conventionalFighter = 7
+    fixedWingSupport = 8
+    industrialMech = 9
+    omniFighter = 10
+    omniMech = 11
+    spheroid = 12
+    supportVehicle = 13
+    omniVehicle = 14
+    warship = 15
 
 
 class InventoryStorageType(Enum):
@@ -540,7 +542,7 @@ class MotionType(str, Enum):
     Attributes:
 
     Examples:
-        >>> MotionType.Aerodyne
+        >>> MotionType.aerodyne
         'Aerodyne'
         >>> MotionType.VTOL
         'VTOL'

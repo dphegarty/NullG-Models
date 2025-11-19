@@ -5,7 +5,8 @@ from pydantic import Field, field_validator, ValidationInfo, BaseModel
 
 from NullgModels.Constants import FIELD_EQUIPMENT_TYPE
 from NullgModels.NullGBaseModels import NullGBaseModel
-from NullgModels.NullGEnums import EquipmentType, TechbaseType
+from NullgModels.NullGEnums import EquipmentType, TechbaseType, UnitSubtype
+
 
 class EquipmentWeaponDamage(NullGBaseModel):
     """
@@ -165,23 +166,6 @@ class WeaponClassification(BaseModel):
     isSubCapital: bool = Field(description="Is this Sub-capital", default=False, examples=[True, False])
     isSwitchable: bool = Field(description="", default=False, examples=[True, False])
     useTargetingComputer: bool = Field(description="Can this use a targeting computer", default=False, examples=[True, False])
-
-class EquipmentUnitTypes(NullGBaseModel):
-    """
-    Defines which unit types are legally allowed to mount this specific piece of equipment.
-    """
-    battlearmor: Optional[bool] = Field(default=False, description="Can be used by Battle Armor")
-    fighters: Optional[bool] = Field(default=False, description="Can be used by Fighters")
-    infantry: Optional[bool] = Field(default=False, description="Can be used by Infantry")
-    mech: Optional[bool] = Field(default=False, description="Can be used by Battlemech")
-    protomechs: Optional[bool] = Field(default=False, description="Can be used by Protomech")
-    smallcraft: Optional[bool] = Field(default=False, description="Can be used by Small Craft")
-    supportvehicle: Optional[bool] = Field(default=False, description="Can be used by Support Vehicles")
-    vehicles: Optional[bool] = Field(default=False, description="Can be used by Vehicles")
-    combatvehicle: Optional[bool] = Field(default=False, description="Can be used by Combat Vehicles")
-    dropship: Optional[bool] = Field(default=False, description="Can be used by Dropship")
-    aerospace: Optional[bool] = Field(default=False, description="Can be used by Aerospace")
-
 
 class BaseEquipmentItem(NullGBaseModel):
     """
@@ -438,8 +422,16 @@ class EquipmentItem(NullGBaseModel):
     techRating: Optional[str] = Field(description="", default=None)
     techbase: Optional[TechbaseType] = Field(description="", default=None)
     type: Optional[EquipmentTypeData] = Field(description="", default=None)
-    unitTypes: Optional[EquipmentUnitTypes] = Field(description="", default=None)
-    version: Optional[float] = Field(description="", default=None)
+    unitSubtypes: Optional[List[UnitSubtype]] = Field(
+        description="A list of unit subtypes this item is for",
+        default_factory=list,
+        examples=[0,5]
+    )
+    version: Optional[float] = Field(
+        description="Version of this items data",
+        default=0.01,
+        examples=[1.0, 1.45, 2.0]
+    )
     metadata: Optional[dict] = Field(description="", default=None)
     rulesLevel: Optional[int] = Field(description="", default=None)
     item: Optional[Union[WeaponItem, OtherItem, CockpitItem, AmmoItem, HeatSinkItem, BayItem, GyroItem, EngineItem,
