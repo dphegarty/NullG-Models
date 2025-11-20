@@ -8,6 +8,7 @@ NullG-Models is a Python library that provides a comprehensive collection of dat
 The concept is to provide concert models for the data that is used in the API and to provide a layer of abstraction to make it easier to work with the data. These models should remain simple so they can be easily translated to other languages.
 
 * Right now the focus is on the Battletech universe, but the library is designed to be extensible to other rulesets.
+* API site: https://api.nullg.tech/docs
 
 ## Features
 
