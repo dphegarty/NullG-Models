@@ -4,7 +4,10 @@
 
 ## Overview
 
-NullG-Models is a Python library that provides a comprehensive collection of data models, enumerations, and utility classes for managing Battletech-related data. It is designed to support the NullG system by offering type-safe structures for units, equipment, pilots, and game mechanics across different rule sets (Total Warfare, Alpha Strike, etc.).
+NullG-Models is a Python library that provides a comprehensive collection of data models, enumerations, and utility classes for managing Battletech-related data. It is designed to support the NullG APIs by offering type-safe structures for units, equipment, pilots, and game mechanics across different rule sets (Total Warfare, Alpha Strike, etc.).
+The concept is to provide concert models for the data that is used in the API and to provide a layer of abstraction to make it easier to work with the data. These models should remain simple so they can be easily translated to other languages.
+
+* Right now the focus is on the Battletech universe, but the library is designed to be extensible to other rulesets.
 
 ## Features
 
