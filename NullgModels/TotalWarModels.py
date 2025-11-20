@@ -845,12 +845,6 @@ class TotalWarAerospaceData(TotalWarUnitDataBase):
         examples=[1, 2, 3, 4]
     )
 
-    @computed_field(description="Total external storage capacity.")
-    @property
-    def externalStorage(self) -> int:
-        return self.externalStores + self.extraHardPoints
-
-
 class TotalWarInfantryData(TotalWarUnitDataBase):
     """Complete construction data for Infantry units.
 
