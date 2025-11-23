@@ -53,3 +53,40 @@ public enum JSONValue: Codable, Equatable {
 }
 
 typealias JSONDictionary = [String: JSONValue]
+
+/// Generic server response wrapper mirroring ``NullgModels.ServerResponseItem``.
+///
+/// Provides pagination metadata and a collection of items with dynamic
+/// structures represented via ``JSONDictionary``. Defaults mirror the Python
+/// model to provide sensible initial values when decoding or constructing
+/// instances.
+public struct ServerResponseItem: Codable, Equatable {
+    public var currentPage: Int
+    public var totalPages: Int
+    public var itemsPerPage: Int
+    public var totalItems: Int
+    public var itemClass: String
+    public var items: [JSONDictionary]
+    public var status: String
+    public var message: String
+
+    public init(
+        currentPage: Int = 0,
+        totalPages: Int = 0,
+        itemsPerPage: Int = 50,
+        totalItems: Int = 0,
+        itemClass: String = "",
+        items: [JSONDictionary] = [],
+        status: String = "not completed",
+        message: String = "Empty results"
+    ) {
+        self.currentPage = currentPage
+        self.totalPages = totalPages
+        self.itemsPerPage = itemsPerPage
+        self.totalItems = totalItems
+        self.itemClass = itemClass
+        self.items = items
+        self.status = status
+        self.message = message
+    }
+}
