@@ -89,10 +89,10 @@ class StarSystemControlHistory(BaseModel):
     control changes of the star system.
 
     Attributes:
-        systemId: Unique ID of the system.
+        id: Unique ID of the system.
         controlHistory: List of control history records.
     """
-    systemId: int = Field(description="Unique ID of the system", default=0)
+    id: int = Field(description="Unique ID of the system", default=0)
     controlHistory: List[ControlHistoryRecord] = Field(description="List of control history records", default_factory=list)
 
 class StarSystem(BaseModel):
@@ -104,7 +104,7 @@ class StarSystem(BaseModel):
     other related details.
 
     Attributes:
-        systemId: Unique ID of the system.
+        id: Unique ID of the system.
         systemName: Name of the system.
         alternateName: Alternate name(s) for the system.
         coordinates: Coordinates of the system.
@@ -117,7 +117,7 @@ class StarSystem(BaseModel):
         rechargeStations: List of recharge station locations.
         controlHistory: List of control history records.
     """
-    systemId: int = Field(description="Unique ID of the system", default=0)
+    id: int = Field(description="Unique ID of the system", default=0)
     systemName: str = Field(description="", default="")
     alternateName: List[str] = Field(description="Alternate Name", default_factory=list)
     coordinates: List[CoordinatesItem] = Field(description="", default_factory=list)
@@ -140,7 +140,7 @@ class InnerSphereFactionRecord(BaseModel):
     in the Inner Sphere, providing easy access to faction-specific metadata.
 
     Attributes:
-        factionId: Faction Id.
+        id: Faction Id.
         factionAbbr: Faction Abbreviation.
         factionName: Faction Name.
         color: Faction HTML Color.
@@ -148,7 +148,7 @@ class InnerSphereFactionRecord(BaseModel):
         endYear: End Year.
         sarnaLink: Link to Sarna.
     """
-    factionId: int = Field(description="Faction Id", default=0)
+    id: int = Field(description="Faction Id", default=0)
     factionAbbr: str = Field(description="Faction Abbreviation", default="")
     factionName: str = Field(description="Faction Name", default="")
     color: Optional[str] = Field(description="Faction HTML Color", default="")
