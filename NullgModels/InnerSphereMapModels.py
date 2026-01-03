@@ -74,10 +74,10 @@ class ControlHistoryRecord(BaseModel):
 
     Attributes:
         year: Year this takes effect.
-        factionId: Faction Id.
+        id: Faction Id.
     """
     year: str = Field(description="Year this takes effect", default="", examples=["3025", "3050"])
-    factionId: int = Field(description="Faction Id", default=0)
+    id: int = Field(description="Faction Id", default=0)
 
 class StarSystemControlHistory(BaseModel):
     """
