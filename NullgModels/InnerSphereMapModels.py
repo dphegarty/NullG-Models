@@ -73,27 +73,13 @@ class ControlHistoryRecord(BaseModel):
     the control was in effect and the corresponding faction identifying data.
 
     Attributes:
+        id: Unique ID of the star system.
         year: Year this takes effect.
-        id: Faction Id.
+        factionId: Faction Id.
     """
-    year: str = Field(description="Year this takes effect", default="", examples=["3025", "3050"])
-    id: int = Field(description="Faction Id", default=0)
-
-class StarSystemControlHistory(BaseModel):
-    """
-    Represents the control history of a star system.
-
-    This class is designed to manage and store the control history records
-    associated with a specific star system. The purpose of the class is to
-    facilitate organizational and retrieval tasks related to the historical
-    control changes of the star system.
-
-    Attributes:
-        id: Unique ID of the system.
-        controlHistory: List of control history records.
-    """
-    id: int = Field(description="Unique ID of the system", default=0)
-    controlHistory: List[ControlHistoryRecord] = Field(description="List of control history records", default_factory=list)
+    id: int = Field(description="Unique ID of the star system", default=0)
+    year: int = Field(description="Year this takes effect", default=0, examples=[3025, 3050])
+    factionId: int = Field(description="Faction Id", default=0)
 
 class StarSystem(BaseModel):
     """
