@@ -3,6 +3,7 @@ from NullgModels.HardwarModels import *
 from NullgModels.BattletechModels import *
 from pydantic import BaseModel, ConfigDict, Field
 
+from NullgModels.InnerSphereMapModels import InnerSphereFactionRecord, ControlHistoryRecord, StarSystem
 from NullgModels.UploadModels import UploadUnitData
 
 # -----------------------------
@@ -330,6 +331,9 @@ class DataResultItem(BaseModel):
         BoxsetItem,
         ElementData,
         UnitDataExtended,
+        StarSystem,
+        ControlHistoryRecord,
+        InnerSphereFactionRecord,
         Dict]
     ] = Field(
         description="List of result items. Type varies based on the query endpoint. "
