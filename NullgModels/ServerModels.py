@@ -3,7 +3,7 @@ from NullgModels.HardwarModels import *
 from NullgModels.BattletechModels import *
 from pydantic import BaseModel, ConfigDict, Field
 
-from NullgModels.InnerSphereMapModels import InnerSphereFactionRecord, ControlHistoryRecord, StarSystem
+from NullgModels.InnerSphereMapModels import InnerSphereFactionRecord, StarSystemControlHistoryRecord, StarSystem
 from NullgModels.UploadModels import UploadUnitData
 
 # -----------------------------
@@ -332,7 +332,7 @@ class DataResultItem(BaseModel):
         ElementData,
         UnitDataExtended,
         StarSystem,
-        ControlHistoryRecord,
+        StarSystemControlHistoryRecord,
         InnerSphereFactionRecord,
         Dict]
     ] = Field(

@@ -64,7 +64,7 @@ class SizeItem(BaseModel):
     b: int = Field(description="b value", default=0)
     c: int = Field(description="c value", default=0)
 
-class ControlHistoryRecord(BaseModel):
+class StarSystemControlHistoryRecord(BaseModel):
     """
     Represents a control history record with its associated details.
 
@@ -114,7 +114,7 @@ class StarSystem(BaseModel):
     rechargeTime: int = Field(description="Recharge time in hours", default=0)
     planets: int = Field(description="Number of planets in the system", default=0)
     rechargeStations: List[str] = Field(description="List of recharge station locations", default_factory=list)
-    controlHistory: List[ControlHistoryRecord] = Field(description="List of control history records", default_factory=list)
+    controlHistory: List[StarSystemControlHistoryRecord] = Field(description="List of control history records", default_factory=list)
 
 class InnerSphereFactionRecord(BaseModel):
     """
