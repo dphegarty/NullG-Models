@@ -154,10 +154,20 @@ class SearchFilter(BaseModel):
     itemsPerPage: Optional[int] = Field(
         description="Maximum number of items to return per page. Controls page size for pagination.",
         default=50,
-        ge=1,
+        ge=10,
         le=100,
         examples=[10, 20, 50, 100]
     )
+
+    @field_validator("itemsPerPage", mode="before")
+    @classmethod
+    def validate_items_per_page(cls, v):
+        return max(min(v, 100), 1) if v is not None else v
+
+    @field_validator("page", mode="before")
+    @classmethod
+    def validate_page(cls, v):
+        return max(min(v, 1000), 1) if v is not None else v
 
     def validate_security(self):
         """Validate the filter for security compliance.
@@ -227,7 +237,7 @@ class PipelineFilter(BaseModel):
         description="Page number for pagination of aggregation results (1-indexed).",
         default=1,
         ge=1,
-        le=20
+        le=1000
     )
     itemsPerPage: Optional[int] = Field(
         description="Maximum number of aggregation results to return.",
@@ -235,6 +245,16 @@ class PipelineFilter(BaseModel):
         ge=1,
         le=100
     )
+
+    @field_validator("itemsPerPage", mode="before")
+    @classmethod
+    def validate_items_per_page(cls, v):
+        return max(min(v, 100), 1) if v is not None else v
+
+    @field_validator("page", mode="before")
+    @classmethod
+    def validate_page(cls, v):
+        return max(min(v, 100), 1) if v is not None else v
 
     def validate_security(self):
         """Validate the pipeline for security compliance.
