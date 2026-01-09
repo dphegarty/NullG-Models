@@ -415,8 +415,7 @@ class ServerResponseItem(BaseModel):
     itemsPerPage: int = Field(
         description="Number of items per page.",
         default=50,
-        ge=10,
-        le=200
+        ge=10
     )
     totalItems: int = Field(
         description="Total count of items across all pages.",
