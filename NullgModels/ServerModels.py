@@ -331,7 +331,6 @@ class DataResultItem(BaseModel):
         description="Number of items included in each page of results.",
         default=50,
         ge=10,
-        le=200
     )
     totalItems: int = Field(
         description="Total count of items matching the query criteria across all pages.",
