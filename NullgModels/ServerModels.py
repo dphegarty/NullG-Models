@@ -76,7 +76,10 @@ def validate_pipeline(pipeline_list: Any):
 
             # Recurse into nested dicts or lists
             if isinstance(value, (dict, list)):
-                validate_pipeline(value)
+                if key == "$match":
+                    validate_filter(value)
+                else:
+                    validate_pipeline(value)
     elif isinstance(pipeline_list, list):
         for item in pipeline_list:
             validate_pipeline(item)
