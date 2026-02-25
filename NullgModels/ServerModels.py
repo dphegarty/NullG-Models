@@ -130,7 +130,6 @@ class SearchFilter(BaseModel):
         description="MongoDB query filter using standard query operators. "
                    "Supports $eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $regex, "
                    "$exists, $and, $or, $nor, $not. Use dot notation for nested fields.",
-        default=dict,
         examples=[
             {"name": "Warhammer"},
             {"totalWar.walkMp": {"$gte": 5}},
