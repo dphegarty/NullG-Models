@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union, Literal
+from typing import Any, List, Optional, Union, Literal, Dict
 
 from pydantic import BaseModel, ConfigDict, Field, RootModel, field_validator
 
@@ -39,6 +39,12 @@ def _parse_swift_single_key_enum(value: Any) -> tuple[str, Any]:
 # ----------------------------
 # Enums from Models.swift / ColonyModels.swift
 # ----------------------------
+class SatelliteObjectType(str, Enum):
+    small = "small"
+    medium = "medium"
+    large = "large"
+    giant = "giant"
+    rings = "rings"
 
 class OrbitalRegion(str, Enum):
     hotZone = "hotZone"
@@ -81,10 +87,12 @@ class PlanetaryHighestLifeForm(str, Enum):
 
 
 class DistanceZoneFromSol(str, Enum):
-    insideInnerSphere = "insideInnerSphere"
-    innerPerphery = "innerPerphery"
-    perphery = "perphery"
-    outerPerphery = "outerPerphery"
+    coreInnerSphere = "coreInnerSphere"
+    interiorInnerSphere = "interiorInnerSphere"
+    frontierInnerSphere = "frontierInnerSphere"
+    periphery = "periphery"
+    outerPeriphery = "outerPeriphery"
+    deepPeriphery = "deepPeriphery"
     outerLimits = "outerLimits"
     edgeOfUnknown = "edgeOfUnknown"
     vastExpanse = "vastExpanse"
@@ -232,9 +240,24 @@ class Star(FrozenModel):
 # For read-only/template-population purposes, it's safest to accept them as strings / minimal objects.
 # If you later add the missing Swift definitions, we can tighten these to true enums.
 
-ObjectType = str
-BeltWidthClass = str
-BeltThermalClass = str
+class ObjectType(str, Enum):
+    empty = "empty"
+    asteroidBelt = "asteroidBelt"
+    dwarfTerrestrial = "dwarfTerrestrial"
+    terrestrial = "terrestrial"
+    giantTerrestrial = "giantTerrestrial"
+    gasGiant = "gasGiant"
+    iceGiant = "iceGiant"
+
+class BeltThermalClass(str, Enum):
+    innerRocky = "innerRocky"
+    outerIcu = "outerIcy"
+
+class BeltWidthClass(str, Enum):
+    narrow = "narrow"
+    standard = "standard"
+    wide = "wide"
+    huge = "huge"
 
 
 class BeltCompositionModel(FrozenModel):
@@ -325,6 +348,32 @@ class AsteroidBelt(FrozenModel):
     smallAsteroidCount: int
     dwarfBodySizeHintKm: IntClosedRange
 
+    @field_validator("dwarfBodySizeHintKm", mode="before")
+    @classmethod
+    def parse_dwarfBodySizeHintKm(cls, v: Any):
+        if isinstance(v, list) and len(v) == 2:
+            return IntClosedRange(lowerBound=v[0], upperBound=v[1])
+        if isinstance(v, IntClosedRange):
+            return v
+        raise ValueError("Invalid dwarfBodySizeHintKm encoding.")
+
+
+class SatelliteObject(FrozenModel):
+    type: SatelliteObjectType
+    value: Union[PlanetBody, int]
+
+    @field_validator("value", mode="before")
+    @classmethod
+    def parse_value(cls, v: Any) -> Any:
+        if isinstance(v, dict):
+            return PlanetBody.model_validate(v)
+        elif isinstance(v, int):
+            return v
+        elif isinstance(v, str):
+            return int(v)
+        else:
+            raise ValueError("Invalid satellite value encoding.")
+
 
 class PlanetBody(FrozenModel):
     planetType: ObjectType
@@ -340,7 +389,69 @@ class PlanetBody(FrozenModel):
     atmosphericComposition: AtmosphericComposition
     temperature: PlanetaryTemperature
     highestLifeForm: PlanetaryHighestLifeForm
+    satellites: Optional[List[SatelliteObject]] = None
     colony: Optional[Colony] = None
+
+    @field_validator("planetType", mode="before")
+    @classmethod
+    def parse_planetType(cls, v: Any) -> Any:
+        if isinstance(v, dict):
+            (value, _) = _parse_swift_single_key_enum(v)
+            return ObjectType(value)
+        elif isinstance(v, str):
+            return ObjectType(v)
+
+    @field_validator("atmosphericPressure", mode="before")
+    @classmethod
+    def parse_atmosphericPressure(cls, v: Any) -> Any:
+        if isinstance(v, dict):
+            (value, _) = _parse_swift_single_key_enum(v)
+            return AtmosphericPressure(value)
+        elif isinstance(v, str):
+            return AtmosphericPressure(v)
+
+    @field_validator("atmosphericComposition", mode="before")
+    @classmethod
+    def parse_atmosphericComposition(cls, v: Any) -> Any:
+        if isinstance(v, dict):
+            (value, _) = _parse_swift_single_key_enum(v)
+            return AtmosphericComposition(value)
+        elif isinstance(v, str):
+            return AtmosphericComposition(v)
+
+    @field_validator("temperature", mode="before")
+    @classmethod
+    def parse_temperature(cls, v: Any) -> Any:
+        if isinstance(v, dict):
+            (value, _) = _parse_swift_single_key_enum(v)
+            return PlanetaryTemperature(value)
+        elif isinstance(v, str):
+            return PlanetaryTemperature(v)
+
+    @field_validator("highestLifeForm", mode="before")
+    @classmethod
+    def parse_highestLifeForm(cls, v: Any) -> Any:
+        if isinstance(v, dict):
+            (value, _) = _parse_swift_single_key_enum(v)
+            return PlanetaryHighestLifeForm(value)
+        elif isinstance(v, str):
+            return PlanetaryHighestLifeForm(v)
+
+    @field_validator("satellites", mode="before")
+    @classmethod
+    def parse_satellites(cls, v) -> Any:
+        convertedObjectsList = []
+        if isinstance(v, list):
+            for satellite in v:
+                if isinstance(satellite, dict):
+                    (satelliteObjectType, payload) = _parse_swift_single_key_enum(satellite)
+                    if isinstance(payload, dict):
+                        (_, value) = _parse_swift_single_key_enum(payload)
+                        satelliteValue = {"type": satelliteObjectType, "value": value}
+                        convertedObjectsList.append(SatelliteObject.model_validate(satelliteValue))
+        if len(convertedObjectsList) > 0:
+            return convertedObjectsList
+        return None
 
 
 class OrbitalObjectEmpty(FrozenModel):
@@ -405,10 +516,11 @@ class OrbitalObject(RootModel[OrbitalObjectUnion]):
         if v == "empty":
             return {"type": "empty"}
         if isinstance(v, dict):
-            k, payload = _parse_swift_single_key_enum(v)
-            if k == "empty":
-                return {"type": "empty"}
-            return {"type": k, "value": payload}
+            (objectType, payload), = v.items()
+            if objectType == "empty":
+                return {"type": "empty", "value": {}}
+            (k, payload) = _parse_swift_single_key_enum(value=payload)
+            return {"type": objectType, "value": payload}
         raise ValueError("Invalid OrbitalObject encoding.")
 
 
@@ -418,7 +530,33 @@ class OrbitalSlot(FrozenModel):
     orbitalRadiusAU: float
     orbitalRadiusKm: float
     region: OrbitalRegion
-    object: OrbitalObject
+    object: OrbitalObjectUnion
+
+    @field_validator("object", mode="before")
+    @classmethod
+    def parse_swift(cls, v: Any) -> Any:
+        if v == "empty":
+            return OrbitalObjectEmpty.model_validate({"type": "empty", "value": {}})
+        if isinstance(v, dict):
+            (objectType, payload), = v.items()
+            if objectType == "empty":
+                return OrbitalObjectEmpty.model_validate({"type": "empty", "value": {}})
+            (k, payload) = _parse_swift_single_key_enum(value=payload)
+            objectData = {"type": objectType, "value": payload}
+            if objectType == ObjectType.asteroidBelt:
+                return OrbitalObjectAsteroidBelt.model_validate(objectData)
+            elif objectType == ObjectType.dwarfTerrestrial:
+                return OrbitalObjectDwarfTerrestrial.model_validate(objectData)
+            elif objectType == ObjectType.terrestrial:
+                return OrbitalObjectTerrestrial.model_validate(objectData)
+            elif objectType == ObjectType.giantTerrestrial:
+                return OrbitalObjectGiantTerrestrial.model_validate(objectData)
+            elif objectType == ObjectType.gasGiant:
+                return OrbitalObjectGasGiant.model_validate(objectData)
+            elif objectType == ObjectType.iceGiant:
+                return OrbitalObjectIceGiant.model_validate(objectData)
+            return {"type": objectType, "value": payload}
+        raise ValueError("Invalid OrbitalObject encoding.")
 
 
 class SolarSystem(FrozenModel):
@@ -448,7 +586,7 @@ class ColonyPlanetInputs(FrozenModel):
 class ColonyGenerationInputs(FrozenModel):
     planet: ColonyPlanetInputs
     distanceFromTerraLY: int
-    distanceZoneFromTerra: DistanceZoneFromSol = DistanceZoneFromSol.insideInnerSphere
+    distanceZoneFromTerra: DistanceZoneFromSol = DistanceZoneFromSol.interiorInnerSphere
     yearsSinceSettlement: Optional[int] = None
     occupancyOverride: Optional[OccupancyHistory] = None
     isUltraAdvancedResearchHub: bool = False
