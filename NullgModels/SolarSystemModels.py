@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from enum import Enum
 from typing import Any, List, Optional, Union, Literal, Dict
 
@@ -23,6 +24,9 @@ class IntClosedRange(FrozenModel):
     # Swift ClosedRange<Int> encodes as {"lowerBound": x, "upperBound": y}
     lowerBound: int
     upperBound: int
+
+    def summary(self) -> str:
+        return f"{self.lowerBound} - {self.upperBound}"
 
 
 def _parse_swift_single_key_enum(value: Any) -> tuple[str, Any]:
@@ -51,6 +55,10 @@ class OrbitalRegion(str, Enum):
     habitableZone = "habitableZone"
     outerZone = "outerZone"
 
+    def displayName(self):
+        text = re.sub(r'([a-z0-9])([A-Z])', r'\1 \2', self.value)
+        text = re.sub(r'([A-Z])([A-Z][a-z])', r'\1 \2', text)
+        return text.title()
 
 class AtmosphericPressure(str, Enum):
     vacuum = "vacuum"
@@ -60,11 +68,30 @@ class AtmosphericPressure(str, Enum):
     high = "high"
     veryHigh = "veryHigh"
 
+    def displayName(self) -> str:
+        if self == AtmosphericPressure.vacuum:
+            return "Vacuum"
+        elif self == AtmosphericPressure.trace:
+            return "Trace"
+        elif self == AtmosphericPressure.low:
+            return "Low"
+        elif self == AtmosphericPressure.normal:
+            return "Normal"
+        elif self == AtmosphericPressure.high:
+            return "High"
+        elif self == AtmosphericPressure.veryHigh:
+            return "Very High"
+        return ""
+
 
 class AtmosphericComposition(str, Enum):
+    none = "none"
     toxic = "toxic"
     tainted = "tainted"
     breathable = "breathable"
+
+    def displayName(self) -> str:
+        return self.value.title()
 
 
 class PlanetaryTemperature(str, Enum):
@@ -72,6 +99,17 @@ class PlanetaryTemperature(str, Enum):
     medium = "medium"
     high = "high"
     veryHigh = "veryHigh"
+
+    def displayName(self) -> str:
+        if self == PlanetaryTemperature.low:
+            return "Low"
+        elif self == PlanetaryTemperature.medium:
+            return "Medium"
+        elif self == PlanetaryTemperature.high:
+            return "High"
+        elif self == PlanetaryTemperature.veryHigh:
+            return "Very High"
+        return ""
 
 
 class PlanetaryHighestLifeForm(str, Enum):
@@ -84,6 +122,9 @@ class PlanetaryHighestLifeForm(str, Enum):
     reptiles = "reptiles"
     birds = "birds"
     mammals = "mammals"
+
+    def displayName(self) -> str:
+        return self.value.title()
 
 
 class DistanceZoneFromSol(str, Enum):
@@ -103,6 +144,9 @@ class Habitability(str, Enum):
     habitable = "habitable"
     marginal = "marginal"
     uninhabitable = "uninhabitable"
+
+    def displayName(self) -> str:
+        return self.value.title()
 
 
 class GovernmentRegion(str, Enum):
@@ -126,6 +170,21 @@ class OccupancyHistory(int, Enum):
     recentInnerSphere = 5
     recentClans = 6
 
+    def displayName(self) -> str:
+        if self == OccupancyHistory.preStarLeague:
+            return "Pre-Star League"
+        elif self == OccupancyHistory.starLeagueHeyday:
+            return "Star League Heyday"
+        elif self == OccupancyHistory.successionWarsRefugees:
+            return "Succession Wars Refugees"
+        elif self == OccupancyHistory.recentPeriphery:
+            return "Recent Periphery"
+        elif self == OccupancyHistory.recentInnerSphere:
+            return "Recent Inner Sphere"
+        elif self == OccupancyHistory.recentClans:
+            return "Recent Clans"
+        return ""
+
 
 class ColonyProfileKind(str, Enum):
     standard = "standard"
@@ -141,6 +200,9 @@ class USILRLetter(int, Enum):
     D = 3
     F = 4
 
+    def displayName(self) -> str:
+        return self.name.title()
+
 
 class BaseGovernment(str, Enum):
     anarchy = "anarchy"
@@ -148,6 +210,19 @@ class BaseGovernment(str, Enum):
     autocracyOligarchy = "autocracyOligarchy"
     dictatorship = "dictatorship"
     clan = "clan"
+
+    def displayName(self) -> str:
+        if self == BaseGovernment.anarchy:
+            return "Anarchy"
+        elif self == BaseGovernment.democracy:
+            return "Democracy"
+        elif self == BaseGovernment.autocracyOligarchy:
+            return "Autocracy/Oligarchy"
+        elif self == BaseGovernment.dictatorship:
+            return "Dictatorship"
+        elif self == BaseGovernment.clan:
+            return "Clan"
+        return ""
 
 
 class GovernmentQualifier(str, Enum):
@@ -170,6 +245,45 @@ class GovernmentQualifier(str, Enum):
     confederacy = "confederacy"  # clan-only qualifiers
     federation = "federation"    # clan-only qualifiers
 
+    def displayName(self) -> str:
+        if self == GovernmentQualifier.athenianCyberdemocracy:
+            return "Athenian Cyberdemocracy"
+        elif self == GovernmentQualifier.communist:
+            return "Communist"
+        elif self == GovernmentQualifier.confederacyAlliance:
+            return "Confederacy Alliance"
+        elif self == GovernmentQualifier.constitutional:
+            return "Constitutional"
+        elif self == GovernmentQualifier.corporate:
+            return "Corporate"
+        elif self == GovernmentQualifier.delegatedDemocracy:
+            return "Delegated Democracy"
+        elif self == GovernmentQualifier.demarchic:
+            return "Demarchic"
+        elif self == GovernmentQualifier.federal:
+            return "Federal"
+        elif self == GovernmentQualifier.feudal:
+            return "Feudal"
+        elif self == GovernmentQualifier.limitedDemocracyHybridRegime:
+            return "Limited Democracy Hybrid Regime"
+        elif self == GovernmentQualifier.monarchy:
+            return "Monarchy"
+        elif self == GovernmentQualifier.parliamentary:
+            return "Parliamentary"
+        elif self == GovernmentQualifier.republicRepresentativeDemocracy:
+            return "Republic Representative Democracy"
+        elif self == GovernmentQualifier.socialist:
+            return "Socialist"
+        elif self == GovernmentQualifier.theocracy:
+            return "Theocracy"
+        elif self == GovernmentQualifier.unitary:
+            return "Unitary"
+        elif self == GovernmentQualifier.confederacy:
+            return "Confederacy"
+        elif self == GovernmentQualifier.federation:
+            return "Federation"
+        return ""
+
 
 class HyperpulseGeneratorType(str, Enum):
     none = "none"
@@ -178,12 +292,64 @@ class HyperpulseGeneratorType(str, Enum):
     ratedCService = "ratedCService"
     ratedDService = "ratedDService"
 
+    def displayName(self) -> str:
+        if self == HyperpulseGeneratorType.none:
+            return "None"
+        elif self == HyperpulseGeneratorType.ratedAHPG:
+            return "A Rated HPG"
+        elif self == HyperpulseGeneratorType.ratedBHPG:
+            return "B Rated HPG"
+        elif self == HyperpulseGeneratorType.ratedCService:
+            return "C Rated Service"
+        elif self == HyperpulseGeneratorType.ratedDService:
+            return "D Rated Service"
+        return ""
+
 
 class RechargingStationLocation(str, Enum):
     none = "none"
     zenith = "zenith"
     nadir = "nadir"
 
+    def displayName(self) -> str:
+        return self.value.title()
+
+class ReportClassificationType(str, Enum):
+    unclassified = "unclassified"
+    restricted = "restricted"
+    confidential = "confidential"
+    secret = "secret"
+    topSecret = "topSecret"
+
+    def displayName(self) -> str:
+        if self == ReportClassificationType.unclassified:
+            return "UNCLASSIFIED"
+        elif self == ReportClassificationType.restricted:
+            return "RESTRICTED"
+        elif self == ReportClassificationType.confidential:
+            return "CONFIDENTIAL"
+        elif self == ReportClassificationType.secret:
+            return "SECRET"
+        elif self == ReportClassificationType.topSecret:
+            return "TOP SECRET"
+        return ""
+
+class ReportPreparedByType(str, Enum):
+    survey = "survey"
+    ship = "ship"
+    office = "office"
+    other = "other"
+
+    def displayName(self) -> str:
+        if self == ReportPreparedByType.survey:
+            return "Survey"
+        elif self == ReportPreparedByType.ship:
+            return "Ship"
+        elif self == ReportPreparedByType.office:
+            return "Office"
+        elif self == ReportPreparedByType.other:
+            return "Other"
+        return ""
 
 # ----------------------------
 # Models.swift output models
@@ -229,6 +395,9 @@ class Star(FrozenModel):
     classification: StellarClassification
     stats: PrimarySolarStats
 
+    def displayName(self):
+        return f"{self.classification.letter}{self.classification.subtype}{self.classification.luminosityClass}"
+
 
 # NOTE:
 # These types are referenced in your Swift file but NOT defined in the provided two files:
@@ -249,9 +418,33 @@ class ObjectType(str, Enum):
     gasGiant = "gasGiant"
     iceGiant = "iceGiant"
 
+    def displayName(self) -> str:
+        if self == ObjectType.empty:
+            return "Empty"
+        elif self == ObjectType.asteroidBelt:
+            return "Asteroid Belt"
+        elif self == ObjectType.dwarfTerrestrial:
+            return "Dwarf Terrestrial"
+        elif self == ObjectType.terrestrial:
+            return "Terrestrial"
+        elif self == ObjectType.giantTerrestrial:
+            return "Giant Terrestrial"
+        elif self == ObjectType.gasGiant:
+            return "Gas Giant"
+        elif self == ObjectType.iceGiant:
+            return "Ice Giant"
+        return ""
+
 class BeltThermalClass(str, Enum):
     innerRocky = "innerRocky"
     outerIcu = "outerIcy"
+
+    def displayName(self) -> str:
+        if self == BeltThermalClass.innerRocky:
+            return "Inner Rocky"
+        elif self == BeltThermalClass.outerIcu:
+            return "Outer Icy"
+        return ""
 
 class BeltWidthClass(str, Enum):
     narrow = "narrow"
@@ -259,6 +452,8 @@ class BeltWidthClass(str, Enum):
     wide = "wide"
     huge = "huge"
 
+    def displayName(self) -> str:
+        return self.value.title()
 
 class BeltCompositionModel(FrozenModel):
     silicates: float
@@ -266,23 +461,47 @@ class BeltCompositionModel(FrozenModel):
     ices: float
     carbonaceous: float
 
+    def compositionSummary(self) -> str:
+        return f"{self.silicates:.2f} silicates, {self.metals:.2f} metals, {self.ices:.2f} ices, {self.carbonaceous:.2f} carbonaceous"
+
 
 class Government(FrozenModel):
     base: BaseGovernment
     qualifiers: List[GovernmentQualifier] = Field(default_factory=list)
+
+    @field_validator("base", mode="before")
+    @classmethod
+    def parse_base(cls, v: Any) -> Any:
+        if isinstance(v, dict):
+            (value, _) = _parse_swift_single_key_enum(v)
+            return BaseGovernment(value)
+        elif isinstance(v, str):
+            return BaseGovernment(v)
+
+    def qualifiersSummary(self) -> str:
+        return ", ".join(self.qualifiers)
 
 
 class TechSophisticationLetter(FrozenModel):
     type: Literal["letter"] = "letter"
     value: USILRLetter
 
+    def displayName(self) -> str:
+        return self.value.displayName()
+
 
 class TechSophisticationAdvanced(FrozenModel):
     type: Literal["advanced"] = "advanced"
 
+    def displayName(self) -> str:
+        return "Advanced"
+
 
 class TechSophisticationRegressed(FrozenModel):
     type: Literal["regressed"] = "regressed"
+
+    def displayName(self) -> str:
+        return "Regressed"
 
 
 TechSophistication = Union[
@@ -291,45 +510,67 @@ TechSophistication = Union[
     TechSophisticationRegressed,
 ]
 
-
-class TechSophisticationSwift(RootModel[TechSophistication]):
-    """
-    Accepts Swift-like encoding:
-      {"letter": 0}   (or {"letter":"A"} depending on your Swift JSONEncoder settings)
-      "advanced"
-      "regressed"
-    Normalizes into a tagged union with a "type".
-    """
-    @field_validator("root", mode="before")
-    @classmethod
-    def parse_swift(cls, v: Any) -> Any:
-        if isinstance(v, str):
-            if v in ("advanced", "regressed"):
-                return {"type": v}
-            raise ValueError("Unknown TechSophistication string.")
-        if isinstance(v, dict):
-            k, payload = _parse_swift_single_key_enum(v)
-            if k == "letter":
-                # payload might be int (0..4) or "A"/"B"/...
-                return {"type": "letter", "value": payload}
-        raise ValueError("Invalid TechSophistication encoding.")
-
-
 class USILR(FrozenModel):
-    techSophistication: TechSophisticationSwift
+    techSophistication: TechSophistication
     industrialDevelopment: USILRLetter
     rawMaterialDependence: USILRLetter
     industrialOutput: USILRLetter
     agriculturalDependence: USILRLetter
 
+    @field_validator("techSophistication", mode="before")
+    @classmethod
+    def parse_techSophistication(cls, v: Any) -> Any:
+        if isinstance(v, dict):
+            (objectType, payload) = _parse_swift_single_key_enum(v)
+            if objectType == "letter":
+                (_, value) = _parse_swift_single_key_enum(payload)
+                objectDict = {"type": "letter", "value": value}
+                return TechSophisticationLetter.model_validate(objectDict)
+            elif objectType == "advanced":
+                objectDict = {"type": "advanced"}
+                return TechSophisticationAdvanced.model_validate(objectDict)
+            elif objectType == "regressed":
+                objectDict = {"type": "regressed"}
+                return TechSophisticationRegressed.model_validate(objectDict)
+        raise ValueError("Invalid USILR techSophistication encoding.")
+
 
 class Colony(FrozenModel):
+    name: Optional[str] = ""
     occupancy: OccupancyHistory
     population: int
     usilr: USILR
     government: Government
     rechargeStations: List[RechargingStationLocation]
     hpg: HyperpulseGeneratorType
+
+    @field_validator("rechargeStations", mode="before")
+    @classmethod
+    def parse_rechargeStations(cls, v: Any) -> Any:
+        if isinstance(v, list):
+            convertedObjectsList = []
+            for station in v:
+                if isinstance(station, dict):
+                    (value, _) = _parse_swift_single_key_enum(station)
+                    convertedObjectsList.append(RechargingStationLocation(value))
+            return convertedObjectsList
+        return []
+
+    @field_validator("hpg", mode="before")
+    @classmethod
+    def parse_hpg(cls, v: Any) -> Any:
+        if isinstance(v, dict):
+            (value, _) = _parse_swift_single_key_enum(v)
+            return HyperpulseGeneratorType(value)
+        elif isinstance(v, str):
+            return HyperpulseGeneratorType(v)
+        return HyperpulseGeneratorType("none")
+
+    def rechargeStationSummary(self) -> str:
+         return ", ".join([x.displayName() for x in self.rechargeStations])
+
+    def usilrSummary(self) -> str:
+        return f"{self.usilr.techSophistication.displayName()}-{self.usilr.industrialDevelopment.displayName()}-{self.usilr.rawMaterialDependence.displayName()}-{self.usilr.industrialOutput.displayName()}-{self.usilr.agriculturalDependence.displayName()}"
 
 
 class AsteroidBelt(FrozenModel):
@@ -373,6 +614,14 @@ class SatelliteObject(FrozenModel):
             return int(v)
         else:
             raise ValueError("Invalid satellite value encoding.")
+
+    def summary(self):
+        if isinstance(self.value, PlanetBody):
+            return self.value.planetType.displayName()
+        elif isinstance(self.value, int):
+            return str(self.value)
+        else:
+            return ""
 
 
 class PlanetBody(FrozenModel):
@@ -457,35 +706,55 @@ class PlanetBody(FrozenModel):
 class OrbitalObjectEmpty(FrozenModel):
     type: Literal["empty"] = "empty"
 
+    def displayName(self) -> str:
+        return "Empty"
+
 
 class OrbitalObjectAsteroidBelt(FrozenModel):
     type: Literal["asteroidBelt"] = "asteroidBelt"
     value: AsteroidBelt
+
+    def displayName(self) -> str:
+        return "Asteroid Belt"
 
 
 class OrbitalObjectDwarfTerrestrial(FrozenModel):
     type: Literal["dwarfTerrestrial"] = "dwarfTerrestrial"
     value: PlanetBody
 
+    def displayName(self) -> str:
+        return "Dwarf Terrestrial"
+
 
 class OrbitalObjectTerrestrial(FrozenModel):
     type: Literal["terrestrial"] = "terrestrial"
     value: PlanetBody
 
+    def displayName(self) -> str:
+        return "Terrestrial"
 
 class OrbitalObjectGiantTerrestrial(FrozenModel):
     type: Literal["giantTerrestrial"] = "giantTerrestrial"
     value: PlanetBody
+
+    def displayName(self) -> str:
+        return "Giant Terrestrial"
 
 
 class OrbitalObjectGasGiant(FrozenModel):
     type: Literal["gasGiant"] = "gasGiant"
     value: PlanetBody
 
+    def displayName(self) -> str:
+        return "Gas Giant"
+
 
 class OrbitalObjectIceGiant(FrozenModel):
     type: Literal["iceGiant"] = "iceGiant"
     value: PlanetBody
+
+    def displayName(self) -> str:
+        return "Ice Giant"
 
 
 OrbitalObjectUnion = Union[
@@ -595,3 +864,32 @@ class ColonyGenerationInputs(FrozenModel):
     factionAuthoritarianism: FactionAuthoritarianism = FactionAuthoritarianism.typical
     forceClanGovernment: bool = False
     governmentOverride: Optional[Government] = None
+
+class SolarSystemReport(FrozenModel):
+    reportId: str
+    reportDate: str
+    reportPreparedBy: ReportPreparedByType
+    reportClassification: ReportClassificationType
+    reportFooters: List[str]
+    solarSystem: SolarSystem
+
+    @field_validator("reportClassification", mode="before")
+    @classmethod
+    def parse_reportClassification(cls, v: Any) -> Any:
+        if isinstance(v, dict):
+            (value, _) = _parse_swift_single_key_enum(v)
+            return ReportClassificationType(value)
+        elif isinstance(v, str):
+            return ReportClassificationType(v)
+
+    @field_validator("reportPreparedBy", mode="before")
+    @classmethod
+    def parse_reportPreparedBy(cls, v: Any) -> Any:
+        if isinstance(v, dict):
+            (value, _) = _parse_swift_single_key_enum(v)
+            return ReportPreparedByType(value)
+        elif isinstance(v, str):
+            return ReportPreparedByType(v)
+
+    def get_formatted_footer(self):
+        return ", ".join(self.reportFooters)
